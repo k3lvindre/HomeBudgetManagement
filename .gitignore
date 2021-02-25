@@ -260,7 +260,3 @@ paket-files/
 __pycache__/
 *.pyc
 
-
-*.css linguist-detectable=false
-*.js linguist-detectable=true
-*.java linguist-detectable=false
