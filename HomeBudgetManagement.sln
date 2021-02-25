@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement", "HomeBudgetManagement\HomeBudgetManagement.csproj", "{B04EAE86-12E9-43E7-B45C-86F3277B4A1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.Tests", "HomeBudgetManagement.Tests\HomeBudgetManagement.Tests.csproj", "{DDC31932-07BF-4B1B-914F-A1C08B7F19D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.Domain", "HomeBudgetManagement.DAL\HomeBudgetManagement.Domain.csproj", "{F6D5546D-E597-47F7-A1C1-5B44EABCB111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.API", "HomeBudgetManagement.API\HomeBudgetManagement.API.csproj", "{55FA8DCC-C844-4A36-AA32-5960688077AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagementWinForms", "HomeBudgetManagementWinForms\HomeBudgetManagementWinForms.csproj", "{C4E17618-C89D-4CAE-A3D7-2838F2613DEF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{55FA8DCC-C844-4A36-AA32-5960688077AF} = {55FA8DCC-C844-4A36-AA32-5960688077AF}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.Models", "HomeBudgetManagement.Models\HomeBudgetManagement.Models.csproj", "{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B04EAE86-12E9-43E7-B45C-86F3277B4A1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B04EAE86-12E9-43E7-B45C-86F3277B4A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B04EAE86-12E9-43E7-B45C-86F3277B4A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B04EAE86-12E9-43E7-B45C-86F3277B4A1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDC31932-07BF-4B1B-914F-A1C08B7F19D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC31932-07BF-4B1B-914F-A1C08B7F19D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC31932-07BF-4B1B-914F-A1C08B7F19D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC31932-07BF-4B1B-914F-A1C08B7F19D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6D5546D-E597-47F7-A1C1-5B44EABCB111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6D5546D-E597-47F7-A1C1-5B44EABCB111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6D5546D-E597-47F7-A1C1-5B44EABCB111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6D5546D-E597-47F7-A1C1-5B44EABCB111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55FA8DCC-C844-4A36-AA32-5960688077AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55FA8DCC-C844-4A36-AA32-5960688077AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55FA8DCC-C844-4A36-AA32-5960688077AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55FA8DCC-C844-4A36-AA32-5960688077AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4E17618-C89D-4CAE-A3D7-2838F2613DEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4E17618-C89D-4CAE-A3D7-2838F2613DEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4E17618-C89D-4CAE-A3D7-2838F2613DEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4E17618-C89D-4CAE-A3D7-2838F2613DEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {37EA834B-A51F-4C78-8000-840EF55B3F19}
+	EndGlobalSection
+EndGlobal

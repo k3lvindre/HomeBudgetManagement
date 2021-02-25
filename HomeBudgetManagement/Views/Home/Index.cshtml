@@ -1,0 +1,15 @@
+﻿@model List<ExpenseViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>List of Expenses</h2>
+<ul>
+
+    @foreach(ExpenseViewModel item in Model)
+    {
+        <li>@item.Id</li>
+        <li>@item.Description</li>
+        <li>@item.Amount</li>
+    }
+</ul>
