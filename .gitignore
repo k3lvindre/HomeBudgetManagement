@@ -259,3 +259,8 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+
+*.css linguist-detectable=false
+*.js linguist-detectable=true
+*.java linguist-detectable=false
