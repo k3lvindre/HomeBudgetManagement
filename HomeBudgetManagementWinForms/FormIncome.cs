@@ -16,6 +16,8 @@ namespace HomeBudgetManagementWinForms
 {
     public partial class FormIncome : Form
     {
+        public EventHandler<AccountEventArgs> AccountUpdated;
+
         public FormIncome()
         {
             InitializeComponent();
@@ -56,6 +58,10 @@ namespace HomeBudgetManagementWinForms
         {
             IncomeService IncomeService = new IncomeService();
             dgvList.DataSource = await IncomeService.GetAllIncomesAsync();
+
+            AccountService accountService = new AccountService();
+            Account account = await accountService.GetAccountAsync();
+            AccountUpdated.Invoke(this, new AccountEventArgs(account.Balance));
         }
 
         private async void btnDelete_Click(object sender, EventArgs e)
