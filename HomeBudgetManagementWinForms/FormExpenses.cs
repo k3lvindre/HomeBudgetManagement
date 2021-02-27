@@ -16,6 +16,13 @@ namespace HomeBudgetManagementWinForms
 {
     public partial class FormExpenses : Form
     {
+        //public delegate  void ReCalculateBalance(object sender, AccountEventArgs e);
+        //replace this delegate handler with event so user don't have direct access to removing,adding and invoking the method/delegate handler.
+        //public ReCalculateBalance handler;
+        //public event ReCalculateBalance newHandler;
+        //We can also use public event EventHandler<AccountEventArgs> newHandler; so we no longer need to create the delegate -public delegate void ReCalculateBalance(object sender, AccountEventArgs e);
+        public event EventHandler<AccountEventArgs> idealWayOfEventHandler;
+
         public FormExpenses()
         {
             InitializeComponent();
@@ -56,6 +63,14 @@ namespace HomeBudgetManagementWinForms
         {
             ExpenseService expenseService = new ExpenseService();
             dgvList.DataSource = await expenseService.GetAllExpensesAsync();
+
+            AccountService service = new AccountService();
+            Account account = await service.GetAccountAsync();
+            //replace this delegate invokecation with event
+            //handler();
+            //newHandler?.Invoke(this, new AccountEventArgs(account.Balance));
+            //Here we now use eventhandler
+            idealWayOfEventHandler?.Invoke(this, new AccountEventArgs(account.Balance));
         }
 
         private async void btnDelete_Click(object sender, EventArgs e)
@@ -199,6 +214,16 @@ namespace HomeBudgetManagementWinForms
         {
             dgvList.Columns.Remove("File");
             dgvList.Columns.Remove("FileExtension");
+
+        }
+    }
+
+    public class AccountEventArgs : EventArgs
+    {
+        public readonly double Balance;
+        public AccountEventArgs(double balance)
+        {
+            Balance = balance;
         }
     }
 

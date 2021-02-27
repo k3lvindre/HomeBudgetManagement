@@ -22,6 +22,11 @@ namespace HomeBudgetManagementWinForms
         private void expensesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormExpenses form = new FormExpenses();
+            //Replace how delegate handler is called with event so user doesn't have direct access invoking the delegate handler like form.handler.invoke() and prevents from replacing all the registered methods 
+            //form.handler +=  new FormExpenses.ReCalculateBalance(UpdateBalanceEvent);
+            //form.newHandler += UpdateBalanceEvent;
+            //Here we used the eventhandler instead of event
+            form.idealWayOfEventHandler += UpdateBalanceEvent;
             form.ShowDialog();
         }
 
@@ -31,12 +36,14 @@ namespace HomeBudgetManagementWinForms
             formIncome.ShowDialog();
         }
 
-        private async void accountInfoTimer_Tick(object sender, EventArgs e)
+        private  void accountInfoTimer_Tick(object sender, EventArgs e)
         {
-            AccountService service = new AccountService();
-
-            Account account = await service.GetAccountAsync();
-            toolStripBalance.Text = "Balance: " + account.Balance.ToString();
+         
+        }
+        private  void UpdateBalanceEvent(object sender, AccountEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(sender.ToString());
+            toolStripBalance.Text = "Balance: " + e.Balance.ToString();
         }
     }
 }
