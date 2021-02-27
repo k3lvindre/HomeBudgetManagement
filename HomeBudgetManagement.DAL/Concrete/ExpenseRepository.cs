@@ -149,8 +149,14 @@ namespace HomeBudgetManagement.Domain
                     Expense origExpense = await this.GetAsync(entity.Id);
                     Account account = _homeBudgetManagementContext.Accounts.FirstOrDefault();
                     account.Balance += origExpense.Amount;
-                    origExpense.Amount = entity.Amount;
                     account.Balance -= entity.Amount;
+
+                    //update expense
+                    origExpense.Description = entity.Description;
+                    origExpense.Date = entity.Date;
+                    origExpense.File = entity.File;
+                    origExpense.FileExtension = entity.FileExtension;
+                    origExpense.Amount = entity.Amount;
 
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
