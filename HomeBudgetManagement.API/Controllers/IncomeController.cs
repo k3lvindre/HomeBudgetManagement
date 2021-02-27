@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Threading;
 using System.Linq;
-using HomeBudgetManagement.API.Services;
 
 namespace HomeBudgetManagement.API.Controllers
 {
@@ -14,12 +13,10 @@ namespace HomeBudgetManagement.API.Controllers
     public class IncomeController : ApiController
     {
         private IIncomeRepository _incomeRepository { get; }
-        private IAccountRepository _accountRepository { get; }
 
         public IncomeController(IIncomeRepository IncomeRepository, IAccountRepository accountRepository)
         {
             _incomeRepository = IncomeRepository;
-            _accountRepository = accountRepository;
         }
 
         // GET: Incomes
@@ -72,27 +69,14 @@ namespace HomeBudgetManagement.API.Controllers
                     await _incomeRepository.CreateAsync(Income);
                     if (Income.Id > 0)
                     {
-                        bool result = false;
-                        Account account = await _accountRepository.GetAsync();
-                        if(account != null)
-                        {
-                            account.Balance += Income.Amount;
-                            result = await _accountRepository.SaveAsync(account);
-                        }
-
-                        if (result)
-                        {
-                            return Created<Income>("PostIncome", Income);
-                        }
-                        else
-                        {
-                            await _incomeRepository.DeleteAsync(Income);
-                            return BadRequest();
-                        }
+                        return Created<Income>("PostIncome", Income);
+                    }
+                    else
+                    {
+                        return BadRequest();
                     }
                 }
 
-                return BadRequest();
             }
             catch (System.Exception ex)
             {
@@ -108,15 +92,9 @@ namespace HomeBudgetManagement.API.Controllers
             {
                 using (_incomeRepository)
                 {
-                    Income origIncome = await _incomeRepository.GetAsync(Income.Id);
-
-                    Account account = await _accountRepository.GetAsync();
-                    account.Balance -= origIncome.Amount;
-
                     if(await _incomeRepository.UpdateAsync(Income) > 0)
                     {
-                        account.Balance += Income.Amount;
-                        if( await _accountRepository.SaveAsync(account)) return Ok();
+                       return Ok();
                     }
                 }
 
@@ -135,13 +113,9 @@ namespace HomeBudgetManagement.API.Controllers
             {
                 using (_incomeRepository)
                 {
-                    int result = await _incomeRepository.DeleteRangeAsync(Income);
-                    if (result > 0)
+                    if (await _incomeRepository.DeleteRangeAsync(Income) > 0)
                     {
-                        Account account = await _accountRepository.GetAsync();
-                        account.Balance -= (from i in Income
-                                            select i.Amount).CustomSum();
-                        if (await _accountRepository.SaveAsync(account)) return Ok();
+                        return Ok();
                     }
                 }
 
@@ -163,12 +137,9 @@ namespace HomeBudgetManagement.API.Controllers
                     Income Income = await _incomeRepository.GetAsync(id);
                     if(Income != null)
                     {
-                        int result = await _incomeRepository.DeleteAsync(Income);
-                        if (result > 0)
+                        if (await _incomeRepository.DeleteAsync(Income) > 0)
                         {
-                            Account account = await _accountRepository.GetAsync();
-                            account.Balance -= Income.Amount;
-                            if (await _accountRepository.SaveAsync(account)) return Ok();
+                            return Ok();
                         }
                     }
                 }

@@ -90,8 +90,7 @@ namespace HomeBudgetManagement.API.Controllers
             {
                 using (_expenseRepository)
                 {
-                    int result  = await _expenseRepository.UpdateAsync(expense);
-                    if (result > 0)
+                    if (await _expenseRepository.UpdateAsync(expense) > 0)
                     {
                         return Ok();
                     }
@@ -112,8 +111,7 @@ namespace HomeBudgetManagement.API.Controllers
             {
                 using (_expenseRepository)
                 {
-                    int result = await _expenseRepository.DeleteRangeAsync(expense);
-                    if (result > 0)
+                    if (await _expenseRepository.DeleteRangeAsync(expense) > 0)
                     {
                         return Ok();
                     }
@@ -137,8 +135,7 @@ namespace HomeBudgetManagement.API.Controllers
                     Expense expense = await _expenseRepository.GetAsync(id);
                     if(expense != null)
                     {
-                        int result = await _expenseRepository.DeleteAsync(expense);
-                        if (result > 0)
+                        if (await _expenseRepository.DeleteAsync(expense) > 0)
                         {
                             return Ok();
                         }

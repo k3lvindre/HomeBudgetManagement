@@ -24,30 +24,101 @@ namespace HomeBudgetManagement.Domain
 
         public async Task<Income> CreateAsync(Income entity)
         {
-            _homeBudgetManagementContext.Incomes.Add(entity);
-            await _homeBudgetManagementContext.SaveChangesAsync();
+            using(DbContextTransaction transaction = _homeBudgetManagementContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    _homeBudgetManagementContext.Incomes.Add(entity);
+
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
+                    account.Balance += entity.Amount;
+
+                    await _homeBudgetManagementContext.SaveChangesAsync();
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
             return entity;
+
         }
 
         public async Task<int> CreateRangeAsync(IList<Income> entities)
         {
-            _homeBudgetManagementContext.Incomes.AddRange(entities);
-            return await _homeBudgetManagementContext.SaveChangesAsync();
+            using(DbContextTransaction transaction = _homeBudgetManagementContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    _homeBudgetManagementContext.Incomes.AddRange(entities);
+
+                    double totalAmount = entities.Select(e => e.Amount).CustomSum(); //used my custome extension method
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
+                    account.Balance += totalAmount;
+
+
+                    int result = await _homeBudgetManagementContext.SaveChangesAsync();
+                    transaction.Commit();
+                    return result;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+
+            }
+            return 0;
         }
 
         public async Task<int> DeleteAsync(Income identity)
         {
-            _homeBudgetManagementContext.Entry<Income>(identity).State = EntityState.Deleted;
-            return await _homeBudgetManagementContext.SaveChangesAsync();
+            using (DbContextTransaction transaction = _homeBudgetManagementContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    _homeBudgetManagementContext.Entry<Income>(identity).State = EntityState.Deleted;
+
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
+                    account.Balance -= identity.Amount;
+
+                    int result =  await _homeBudgetManagementContext.SaveChangesAsync();
+                    transaction.Commit();
+                    return result;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return 0;
         }
 
         public async Task<int> DeleteRangeAsync(List<Income> range)
         {
-            foreach (Income item in range)
+            using (DbContextTransaction transaction = _homeBudgetManagementContext.Database.BeginTransaction())
             {
-                _homeBudgetManagementContext.Entry<Income>(item).State = EntityState.Deleted;
+                try
+                {
+                    foreach (Income item in range)
+                    {
+                        _homeBudgetManagementContext.Entry<Income>(item).State = EntityState.Deleted;
+                    }
+
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
+                    account.Balance -= range.Select(e => e.Amount).CustomSum(); //used my custom extension method
+
+                    int result = await _homeBudgetManagementContext.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return result;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
             }
-            return await _homeBudgetManagementContext.SaveChangesAsync();
+            return 0;
         }
 
         public async Task<List<Income>> ExecuteQueryAsync(string sql)
@@ -72,8 +143,35 @@ namespace HomeBudgetManagement.Domain
 
         public async Task<int> UpdateAsync(Income entity)
         {
-             _homeBudgetManagementContext.Entry<Income>(entity).State = EntityState.Modified;
-             return await _homeBudgetManagementContext.SaveChangesAsync();
+            using (DbContextTransaction transaction = _homeBudgetManagementContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    Income origIncome = await this.GetAsync(entity.Id);
+
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
+                    account.Balance -= origIncome.Amount;
+                    account.Balance += entity.Amount;
+
+                    //update expense
+                    origIncome.Description = entity.Description;
+                    origIncome.Date = entity.Date;
+                    origIncome.File = entity.File;
+                    origIncome.FileExtension = entity.FileExtension;
+                    origIncome.Amount = entity.Amount;
+
+
+                    int result = await _homeBudgetManagementContext.SaveChangesAsync();
+                    transaction.Commit();
+                    return result;
+
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
+            return 0;
         }
 
         //Implement Idisposable,  We can also implement "`Finalize" to override GC memory handling but it take some time.

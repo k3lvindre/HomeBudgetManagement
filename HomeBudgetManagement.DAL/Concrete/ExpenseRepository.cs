@@ -29,7 +29,7 @@ namespace HomeBudgetManagement.Domain
                 try
                 {
                     _homeBudgetManagementContext.Expenses.Add(entity);
-                    Account account = _homeBudgetManagementContext.Accounts.FirstOrDefault();
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
                     account.Balance -= entity.Amount;
 
                     await _homeBudgetManagementContext.SaveChangesAsync();
@@ -51,7 +51,7 @@ namespace HomeBudgetManagement.Domain
                 try
                 {
                     _homeBudgetManagementContext.Expenses.AddRange(entities);
-                    Account account = _homeBudgetManagementContext.Accounts.FirstOrDefault();
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
                     account.Balance -= entities.Select(e=>e.Amount).Sum();
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
@@ -76,7 +76,7 @@ namespace HomeBudgetManagement.Domain
                 try
                 {
                     _homeBudgetManagementContext.Entry<Expense>(identity).State = EntityState.Deleted;
-                    Account account = _homeBudgetManagementContext.Accounts.FirstOrDefault();
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
                     account.Balance += identity.Amount;
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
@@ -103,7 +103,7 @@ namespace HomeBudgetManagement.Domain
                     {
                         _homeBudgetManagementContext.Entry<Expense>(item).State = EntityState.Deleted;
                     }
-                    Account account = _homeBudgetManagementContext.Accounts.FirstOrDefault();
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
                     account.Balance += range.Select(e => e.Amount).Sum();
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
@@ -147,7 +147,7 @@ namespace HomeBudgetManagement.Domain
                 try
                 {
                     Expense origExpense = await this.GetAsync(entity.Id);
-                    Account account = _homeBudgetManagementContext.Accounts.FirstOrDefault();
+                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
                     account.Balance += origExpense.Amount;
                     account.Balance -= entity.Amount;
 
