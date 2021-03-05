@@ -33,7 +33,11 @@ namespace HomeBudgetManagementWinForms
         private void incomeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormIncome formIncome = new FormIncome();
-            formIncome.AccountUpdated += UpdateBalanceEvent;
+            //Used lambda expression for assigning event
+            formIncome.AccountUpdated += (frmIncomeAsTheSender , eventArgs)=>{
+                System.Diagnostics.Debug.WriteLine(frmIncomeAsTheSender.ToString());
+                toolStripBalance.Text = "Balance: " + eventArgs.Balance.ToString();
+            };
             formIncome.ShowDialog();
         }
 
