@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
@@ -36,7 +35,6 @@
             this.incomeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripBalance = new System.Windows.Forms.ToolStripStatusLabel();
-            this.accountInfoTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,12 +90,6 @@
             this.toolStripBalance.Name = "toolStripBalance";
             this.toolStripBalance.Size = new System.Drawing.Size(0, 17);
             // 
-            // accountInfoTimer
-            // 
-            this.accountInfoTimer.Enabled = true;
-            this.accountInfoTimer.Interval = 1000;
-            this.accountInfoTimer.Tick += new System.EventHandler(this.accountInfoTimer_Tick);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -125,7 +117,6 @@
         private System.Windows.Forms.ToolStripMenuItem incomeToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripBalance;
-        private System.Windows.Forms.Timer accountInfoTimer;
     }
 }
 

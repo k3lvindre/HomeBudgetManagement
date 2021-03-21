@@ -53,7 +53,7 @@ namespace HomeBudgetManagement.Domain
                 {
                     _homeBudgetManagementContext.Incomes.AddRange(entities);
 
-                    double totalAmount = entities.Select(e => e.Amount).CustomSum(); //used my custome extension method
+                    double totalAmount = entities.Select(e => e.Amount).CustomSum(); //used my custom extension method
                     Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
                     account.Balance += totalAmount;
 

@@ -41,10 +41,6 @@ namespace HomeBudgetManagementWinForms
             formIncome.ShowDialog();
         }
 
-        private  void accountInfoTimer_Tick(object sender, EventArgs e)
-        {
-         
-        }
         private  void UpdateBalanceEvent(object sender, AccountEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(sender.ToString());
