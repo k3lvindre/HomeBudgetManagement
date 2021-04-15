@@ -15,6 +15,7 @@ using HomeBudgetManagement.Models;
 namespace HomeBudgetManagement.API.Controllers
 {
     [RoutePrefix("api/Account")]
+    [AcceptHeaderFilter]
     public class AccountController : ApiController
     {
         IAccountRepository _accountRepository;
