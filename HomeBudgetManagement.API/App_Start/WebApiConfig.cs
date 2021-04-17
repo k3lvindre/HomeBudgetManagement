@@ -28,6 +28,9 @@ namespace HomeBudgetManagement.API
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            //register filters globally so you don't have to add it on every controller
+            //config.Filters.Add(new BasicAuthenticationAttribute());
         }
     }
 }

@@ -161,6 +161,7 @@
     <Compile Include="Controllers\IncomeController.cs" />
     <Compile Include="Controllers\ExpenseController.cs" />
     <Compile Include="Filters\AcceptHeaderFilter.cs" />
+    <Compile Include="Filters\BasicAuthenticationAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

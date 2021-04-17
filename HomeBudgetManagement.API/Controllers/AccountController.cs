@@ -16,6 +16,7 @@ namespace HomeBudgetManagement.API.Controllers
 {
     [RoutePrefix("api/Account")]
     [AcceptHeaderFilter]
+    [BasicAuthentication]
     public class AccountController : ApiController
     {
         IAccountRepository _accountRepository;
