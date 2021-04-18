@@ -42,8 +42,8 @@ namespace HomeBudgetManagement.API.Controllers
             }
         }
 
-        [HttpGet, Route("{id}")]
-        public async Task<IHttpActionResult> GetById(int id)
+        [HttpGet, Route("{id?}",Name ="GetExpenseById")]
+        public async Task<IHttpActionResult> GetById(int? id)
         {
             if (id > 0)
             {
@@ -61,7 +61,7 @@ namespace HomeBudgetManagement.API.Controllers
         }
 
         [HttpPost, Route("PostExpense")]
-        public async Task<IHttpActionResult> AddExpense(Expense expense)
+        public async Task<IHttpActionResult> AddExpense([FromBody] Expense expense)
         {
             try
             {
@@ -70,7 +70,8 @@ namespace HomeBudgetManagement.API.Controllers
                     await _expenseRepository.CreateAsync(expense);
                     if (expense.Id > 0)
                     {
-                        return Created<Expense>("PostExpense", expense);
+                        //used createdatroute to exposed url at the header
+                        return CreatedAtRoute("GetExpenseById",new { id = expense.Id }, expense);
                     }
                 }
 
