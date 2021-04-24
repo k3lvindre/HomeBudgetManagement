@@ -27,6 +27,9 @@ namespace HomeBudgetManagementMVC.Core
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            } else
+            {
+                app.UseExceptionHandler("/Home/Error");
             }
 
             //Static files, such as HTML, CSS, images, and
@@ -40,7 +43,7 @@ namespace HomeBudgetManagementMVC.Core
             //Consider creating the wwwroot/ images folder and adding the wwwroot / images / MyImage.jpg file.The URI format to access a file in the images folder is https://<hostname>/images/<image_file_name>. For example, https://localhost:5001/images/MyImage.jpg
             app.UseStaticFiles();
 
-            app.UseExceptionHandler();
+            
 
 
             app.UseMvc(x => x.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"));

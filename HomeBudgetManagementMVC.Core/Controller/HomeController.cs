@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using HomeBudgetManagementMVC.Core.Models;
+using System.Diagnostics;
 
 namespace HomeBudgetManagementMVC.Core
 {
@@ -13,5 +15,12 @@ namespace HomeBudgetManagementMVC.Core
         {
             return View();
         }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel() { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+        }
+
     }
 }
