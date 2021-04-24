@@ -24,8 +24,12 @@ namespace HomeBudgetManagementMVC.Core
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            //The templates place UseDeveloperExceptionPage or UseExceptionHandler early in the 
+            //middleware pipeline so that it can catch unhandled exceptions
+            //thrown in middleware that follows.
             if (env.IsDevelopment())
             {
+
                 app.UseDeveloperExceptionPage();
             } else
             {
