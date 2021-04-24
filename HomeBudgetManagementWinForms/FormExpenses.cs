@@ -206,7 +206,7 @@ namespace HomeBudgetManagementWinForms
             expenseService = new ExpenseService();
             byte[] file = await expenseService.DownloadFile(ex.Id);
 
-            File.WriteAllBytes(Application.StartupPath+"\\"+ex.FileExtension, file);
+            File.WriteAllBytes($"{Application.StartupPath}\\{ex.FileExtension}", file);
             System.Diagnostics.Process.Start(Application.StartupPath + "\\" + ex.FileExtension);
         }
 
