@@ -16,6 +16,11 @@ namespace HomeBudgetManagement.Domain
             _dbContext = new HomeBudgetManagementContext();
         }
 
+        public AccountRepository(HomeBudgetManagementContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public  async Task<Account> GetAsync()
         {
             Account account = await _dbContext.Accounts.FirstOrDefaultAsync();
