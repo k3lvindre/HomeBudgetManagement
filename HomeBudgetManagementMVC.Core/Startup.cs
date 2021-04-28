@@ -29,7 +29,6 @@ namespace HomeBudgetManagementMVC.Core
             //thrown in middleware that follows.
             if (env.IsDevelopment())
             {
-
                 app.UseDeveloperExceptionPage();
             } else
             {
