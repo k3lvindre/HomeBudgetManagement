@@ -48,6 +48,43 @@ namespace HomeBudgetManagement.Domain
             return false;
         }
 
+        public async Task AddBalanceAsync(double amount, bool save = false)
+        {
+            Account account = await _dbContext.Accounts.FirstOrDefaultAsync();
+
+            if(account != null)
+            {
+                account.Balance += amount;
+            }
+
+            if(save) await SaveAsync(account);
+        }
+
+        public async Task DeductFromBalanceAsync(double amount, bool save = false)
+        {
+            Account account = await _dbContext.Accounts.FirstOrDefaultAsync();
+
+            if(account != null)
+            {
+                account.Balance -= amount;
+            }
+
+            if(save) await SaveAsync(account);
+        }
+
+        public async Task UpdateBalanceAsync(double amountToAdd, double amountToDeduct, bool save = false)
+        {
+            Account account = await _dbContext.Accounts.FirstOrDefaultAsync();
+
+            if(account != null)
+            {
+                account.Balance += amountToAdd;
+                account.Balance -= amountToDeduct;
+            }
+
+            if(save) await SaveAsync(account);
+        }
+
         //Implement Idisposable,  We can also implement "`Finalize" to override GC memory handling but it take some time.
         //by implementing idisposable we let consumer handle the disposing/memory handling
         protected void Dispose(bool disposing)

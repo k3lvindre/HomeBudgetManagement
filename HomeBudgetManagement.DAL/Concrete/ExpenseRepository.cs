@@ -11,15 +11,18 @@ namespace HomeBudgetManagement.Domain
     public class ExpenseRepository : IExpenseRepository
     {
         private HomeBudgetManagementContext _homeBudgetManagementContext;
+        private IAccountRepository _accountRepository;
 
         public ExpenseRepository(HomeBudgetManagementContext homeBudgetManagementContext)
         {
             _homeBudgetManagementContext = homeBudgetManagementContext;
+            _accountRepository = new AccountRepository(_homeBudgetManagementContext);
         }
 
         public ExpenseRepository()
         {
             _homeBudgetManagementContext = new HomeBudgetManagementContext();
+            _accountRepository = new AccountRepository(_homeBudgetManagementContext);
         }
 
         public async Task<Expense> CreateAsync(Expense entity)
@@ -29,8 +32,8 @@ namespace HomeBudgetManagement.Domain
                 try
                 {
                     _homeBudgetManagementContext.Expenses.Add(entity);
-                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
-                    account.Balance -= entity.Amount;
+
+                    await _accountRepository.DeductFromBalanceAsync(entity.Amount);
 
                     await _homeBudgetManagementContext.SaveChangesAsync();
                     transaction.Commit();
@@ -51,8 +54,8 @@ namespace HomeBudgetManagement.Domain
                 try
                 {
                     _homeBudgetManagementContext.Expenses.AddRange(entities);
-                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
-                    account.Balance -= entities.Select(e=>e.Amount).Sum();
+
+                    await _accountRepository.DeductFromBalanceAsync(entities.Select(e => e.Amount).Sum());
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
                     transaction.Commit();
@@ -76,8 +79,8 @@ namespace HomeBudgetManagement.Domain
                 try
                 {
                     _homeBudgetManagementContext.Entry<Expense>(identity).State = EntityState.Deleted;
-                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
-                    account.Balance += identity.Amount;
+
+                    await _accountRepository.AddBalanceAsync(identity.Amount);
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
                     transaction.Commit();
@@ -103,8 +106,8 @@ namespace HomeBudgetManagement.Domain
                     {
                         _homeBudgetManagementContext.Entry<Expense>(item).State = EntityState.Deleted;
                     }
-                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
-                    account.Balance += range.Select(e => e.Amount).Sum();
+
+                    await _accountRepository.AddBalanceAsync(range.Select(e => e.Amount).Sum());
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
                     transaction.Commit();
@@ -118,6 +121,38 @@ namespace HomeBudgetManagement.Domain
                 }
             }
             return 0;
+        }
+
+        public async Task<int> UpdateAsync(Expense entity)
+        {
+            using (DbContextTransaction transaction = _homeBudgetManagementContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    Expense origExpense = await this.GetAsync(entity.Id);
+
+                    await _accountRepository.UpdateBalanceAsync(origExpense.Amount, entity.Amount);
+
+                    //update expense
+                    origExpense.Description = entity.Description;
+                    origExpense.Date = entity.Date;
+                    origExpense.File = entity.File;
+                    origExpense.FileExtension = entity.FileExtension;
+                    origExpense.Amount = entity.Amount;
+
+                    int result = await _homeBudgetManagementContext.SaveChangesAsync();
+                    transaction.Commit();
+
+                    return result;
+                }
+                catch (Exception ex)
+                {
+
+                    transaction.Rollback();
+                }
+            }
+            return 0;
+
         }
 
         public async Task<List<Expense>> ExecuteQueryAsync(string sql)
@@ -140,39 +175,7 @@ namespace HomeBudgetManagement.Domain
             return await _homeBudgetManagementContext.Expenses.FindAsync(id);
         }
 
-        public async Task<int> UpdateAsync(Expense entity)
-        {
-            using (DbContextTransaction transaction = _homeBudgetManagementContext.Database.BeginTransaction())
-            {
-                try
-                {
-                    Expense origExpense = await this.GetAsync(entity.Id);
-                    Account account = await _homeBudgetManagementContext.Accounts.FirstOrDefaultAsync();
-                    account.Balance += origExpense.Amount;
-                    account.Balance -= entity.Amount;
-
-                    //update expense
-                    origExpense.Description = entity.Description;
-                    origExpense.Date = entity.Date;
-                    origExpense.File = entity.File;
-                    origExpense.FileExtension = entity.FileExtension;
-                    origExpense.Amount = entity.Amount;
-
-
-                    int result = await _homeBudgetManagementContext.SaveChangesAsync();
-                    transaction.Commit();
-
-                    return result;
-                }
-                catch (Exception ex)
-                {
-
-                    transaction.Rollback();
-                }
-            }
-            return 0;
-
-        }
+        
 
         //Implement Idisposable,  We can also implement "`Finalize" to override GC memory handling but it take some time.
         //by implementing idisposable we let consumer handle the disposing/memory handling
