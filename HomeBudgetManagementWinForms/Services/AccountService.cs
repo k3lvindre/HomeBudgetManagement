@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using HomeBudgetManagement.Models;
 using System.Configuration;
+using System.Text;
 
 namespace HomeBudgetManagementWinForms.Services
 {
@@ -23,6 +25,11 @@ namespace HomeBudgetManagementWinForms.Services
         {
             using (_client)
             {
+                _client.DefaultRequestHeaders.Add("api-key", "12345");
+
+                byte[] authToken = Encoding.ASCII.GetBytes("kelvin:password");
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
+
                 HttpResponseMessage result = await _client.GetAsync("api/Account/Get");
                 if (result.IsSuccessStatusCode)
                 {
