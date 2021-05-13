@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
  using Microsoft.AspNetCore.Routing;
-
+using Microsoft.Extensions.Hosting;
 
 namespace HomeBudgetManagementMVC.Core
 {
@@ -22,7 +22,7 @@ namespace HomeBudgetManagementMVC.Core
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //The templates place UseDeveloperExceptionPage or UseExceptionHandler early in the 
             //middleware pipeline so that it can catch unhandled exceptions
@@ -46,10 +46,14 @@ namespace HomeBudgetManagementMVC.Core
             //Consider creating the wwwroot/ images folder and adding the wwwroot / images / MyImage.jpg file.The URI format to access a file in the images folder is https://<hostname>/images/<image_file_name>. For example, https://localhost:5001/images/MyImage.jpg
             app.UseStaticFiles();
 
-            
+            //adds route matching to the middleware pipeline.
+            //This middleware looks at the set of endpoints defined in the app,
+            //and selects the best match based on the request.
+            app.UseRouting();
 
-
-            app.UseMvc(x => x.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"));
+            //adds route matching to the middleware pipeline. This middleware looks at the set of endpoints defined in the app,
+            //and selects the best match based on the request.
+            app.UseEndpoints(option => option.MapDefaultControllerRoute());
         }
     }
 }
