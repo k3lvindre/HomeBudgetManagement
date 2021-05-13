@@ -51,8 +51,8 @@ namespace HomeBudgetManagementMVC.Core
             //and selects the best match based on the request.
             app.UseRouting();
 
-            //adds route matching to the middleware pipeline. This middleware looks at the set of endpoints defined in the app,
-            //and selects the best match based on the request.
+            //adds endpoint execution to the middleware pipeline.
+            //It runs the delegate associated with the selected endpoint.
             app.UseEndpoints(option => option.MapDefaultControllerRoute());
         }
     }
