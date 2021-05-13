@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.438
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement", "HomeBudgetManagement\HomeBudgetManagement.csproj", "{B04EAE86-12E9-43E7-B45C-86F3277B4A1C}"
 EndProject
@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagementWinForm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.Models", "HomeBudgetManagement.Models\HomeBudgetManagement.Models.csproj", "{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagementMVC.Core", "HomeBudgetManagementMVC.Core\HomeBudgetManagementMVC.Core.csproj", "{8699D8BF-0A43-453C-AA7C-7D638588FD3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeBudgetManagement.MVC.Core", "HomeBudgetManagementMVC.Core\HomeBudgetManagement.MVC.Core.csproj", "{DA763F7F-53AA-4516-8E78-E88569B8AEF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,10 +50,10 @@ Global
 		{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{567C4A5A-FF51-49CB-B4EE-F48A97852FD6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8699D8BF-0A43-453C-AA7C-7D638588FD3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8699D8BF-0A43-453C-AA7C-7D638588FD3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8699D8BF-0A43-453C-AA7C-7D638588FD3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8699D8BF-0A43-453C-AA7C-7D638588FD3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA763F7F-53AA-4516-8E78-E88569B8AEF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA763F7F-53AA-4516-8E78-E88569B8AEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA763F7F-53AA-4516-8E78-E88569B8AEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA763F7F-53AA-4516-8E78-E88569B8AEF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
