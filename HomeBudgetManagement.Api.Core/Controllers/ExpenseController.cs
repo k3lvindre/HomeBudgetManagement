@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HomeBudgetManagement.Api.Core.Services;
+using HomeBudgetManagement.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,11 +14,22 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     [ApiController]
     public class ExpenseController : ControllerBase
     {
-        // GET: api/<ValuesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IExpenseRepository _expenseRepository;
+
+        public ExpenseController(IExpenseRepository expenseRepository)
         {
-            return new string[] { "value1", "value2" };
+            _expenseRepository = expenseRepository;
+        }
+
+        [HttpGet("GetAllExpenses")]
+        public async Task<IActionResult> Get()
+        {
+            List<Expense> expenses = await _expenseRepository.GetAllAsync();
+            if (expenses.Any())
+            {
+                return Ok(expenses);
+            }
+            else return NotFound();
         }
 
         // GET api/<ValuesController>/5
