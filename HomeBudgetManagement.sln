@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.Models
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeBudgetManagement.MVC.Core", "HomeBudgetManagementMVC.Core\HomeBudgetManagement.MVC.Core.csproj", "{DA763F7F-53AA-4516-8E78-E88569B8AEF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.Api.Core", "HomeBudgetManagement.Api.Core\HomeBudgetManagement.Api.Core.csproj", "{392D0430-49C3-4497-B408-CE2735A9D343}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{DA763F7F-53AA-4516-8E78-E88569B8AEF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA763F7F-53AA-4516-8E78-E88569B8AEF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA763F7F-53AA-4516-8E78-E88569B8AEF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{392D0430-49C3-4497-B408-CE2735A9D343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{392D0430-49C3-4497-B408-CE2735A9D343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{392D0430-49C3-4497-B408-CE2735A9D343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{392D0430-49C3-4497-B408-CE2735A9D343}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
