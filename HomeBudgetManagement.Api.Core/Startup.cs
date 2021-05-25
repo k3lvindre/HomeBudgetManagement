@@ -25,7 +25,6 @@ namespace HomeBudgetManagement.Api.Core
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             //services.AddSwaggerGen(c =>
@@ -36,7 +35,6 @@ namespace HomeBudgetManagement.Api.Core
             services.AddDbContext<HomeBudgetManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HbmConnectionString")), ServiceLifetime.Scoped);
 
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
-        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

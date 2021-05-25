@@ -1,0 +1,35 @@
+﻿@model List<HomeBudgetManagement.Models.Expense>;
+
+@{
+    ViewData["Title"] = "Expenses";
+}
+
+<h2>Expenses</h2>
+
+@if (Model != null)
+{
+    <table style="width:100%">
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Date</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Description</td>
+                <td>@item.Amount</td>
+                <td>@item.Date</td>
+                <td><a href="@Url.Action("Edit", "Expense", new { id = item.Id })">Edit</a></td>
+                <td><a href="@Url.Action("Delete", "Expense", new { id = item.Id })">Delete</a></td>
+
+            </tr>
+        }
+    </table>
+    <p><a href="@Url.Action("Add","Expense")">Create Expense</a></p>
+} else { 
+    <p>No Item found.</p>
+}
+
+
+

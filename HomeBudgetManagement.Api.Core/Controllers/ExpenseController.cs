@@ -21,7 +21,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             _expenseRepository = expenseRepository;
         }
 
-        [HttpGet("GetAllExpenses")]
+        [HttpGet("List")]
         public async Task<IActionResult> Get()
         {
             List<Expense> expenses = await _expenseRepository.GetAllAsync();
@@ -32,29 +32,51 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             else return NotFound();
         }
 
-        // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetBydId(int id)
         {
-            return "value";
+            Expense expense =  await _expenseRepository.GetByIdAsync(id);
+            if(expense == null)
+            {
+               return  NotFound();
+            }
+            else  return Ok(expense);
         }
 
-        // POST api/<ValuesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("PostExpense")]
+        public async Task<IActionResult> AddExpense([FromBody] Expense expense)
         {
+            expense =  await _expenseRepository.AddAsync(expense);
+            if (expense.Id > 0)
+            {
+                return Accepted();
+            }
+            else return BadRequest();
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("UpdateExpense")]
+        public async Task<IActionResult> UpdateExpense([FromBody] Expense expense)
         {
+            int result = await _expenseRepository.SaveAsync(expense);
+
+            if (result > 0)
+            {
+                return Accepted();
+            }
+            else return BadRequest();
+
         }
 
-        // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
+            int result = await _expenseRepository.RemoveAsync(id);
+
+            if (result > 0)
+            {
+                return Ok();
+            }
+            else return BadRequest();
         }
     }
 }

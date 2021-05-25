@@ -8,17 +8,37 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
  using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
+using HomeBudgetManagement.Models;
+using HomeBudgetManagement.MVC.Core.Models;
+using Microsoft.Extensions.Configuration;
 
-namespace HomeBudgetManagementMVC.Core
+namespace HomeBudgetManagement.MVC.Core
 {
+    //ASP.NET Core apps use a Startup class, which is named Startup by convention.The Startup class:
+    //Optionally includes a ConfigureServices method to configure the app's services. A service is a reusable component that provides app functionality. Services are registered in ConfigureServices and consumed across the app via dependency injection (DI) or ApplicationServices.
+    //Includes a Configure method to create the app's request processing pipeline.
+    //ConfigureServices and Configure are called by the ASP.NET Core runtime when the app starts.
+
+    //Only the following service types can be injected into the Startup constructor when using the Generic Host (IHostBuilder):
+    //IWebHostEnvironment
+    //IHostEnvironment
+    //IConfiguration
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient();
             services.AddMvc();
+            services.AddOptions<HomeBudgetManagementApiConfig>().Bind(Configuration.GetSection("HomeBudgetManagementApiConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,7 +52,7 @@ namespace HomeBudgetManagementMVC.Core
                 app.UseDeveloperExceptionPage();
             } else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Expense/Error");
             }
 
             //Static files, such as HTML, CSS, images, and
