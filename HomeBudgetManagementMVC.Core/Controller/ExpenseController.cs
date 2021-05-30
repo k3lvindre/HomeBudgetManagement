@@ -27,19 +27,20 @@ namespace HomeBudgetManagement.MVC.Core
         [HttpGet]
         public async Task<IActionResult>  Expense()
         {
-            List<Expense> expenses = null;
-
+            List<Expense> expenses = new List<Expense>();
             HttpResponseMessage result = await  _httpClient.GetAsync("Expense/List");
 
             if(result.IsSuccessStatusCode)
             {
                 expenses = JsonSerializer.Deserialize<List<Expense>>(await result.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                return View(expenses);
             }
+            else return View(expenses);
 
-            return View(expenses);
         }
 
-        [HttpDelete]
+        //Used get because this is being called using Url only
+        [HttpGet]
         public async Task<IActionResult>  Delete(int id)
         {
             HttpResponseMessage result = await  _httpClient.DeleteAsync($"Expense/Delete/{id}");
@@ -79,7 +80,7 @@ namespace HomeBudgetManagement.MVC.Core
 
             if(result.IsSuccessStatusCode)
             {
-                return View(expense);
+                return RedirectToAction("Edit",new { id = expense.Id });
             }
             else
             {
