@@ -5,14 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using HomeBudgetManagement.Api.Core.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HomeBudgetManagement.Api.Core.Services
 {
     public class ExpenseRepository : IExpenseRepository
     {
         private readonly HomeBudgetManagementDbContext _dbContext;
+       
 
-        public ExpenseRepository(HomeBudgetManagementDbContext dbContext)
+        public ExpenseRepository(
+            HomeBudgetManagementDbContext dbContext
+        )
         {
             _dbContext = dbContext;
         }
@@ -24,15 +29,51 @@ namespace HomeBudgetManagement.Api.Core.Services
 
         public async Task<Expense> AddAsync(Expense expense)
         {
-            await _dbContext.Expenses.AddAsync(expense);
-            await _dbContext.SaveChangesAsync();
+          
+            using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _dbContext.Expenses.AddAsync(expense);
+                    
+                    Account account = await _dbContext.Account.FirstOrDefaultAsync();
+                    account.Balance -= expense.Amount;
+
+                    await _dbContext.SaveChangesAsync();
+                    await dbContextTransaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                   await dbContextTransaction.RollbackAsync();
+                }
+            }
+
             return expense;
         }
 
-        public async Task<int> AddRangeAsync(List<Expense> expense)
+        public async Task<int> AddRangeAsync(List<Expense> expenses)
         {
-            await _dbContext.Expenses.AddRangeAsync(expense);
-            return await _dbContext.SaveChangesAsync();
+            int result = 0;
+
+            using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    await _dbContext.Expenses.AddRangeAsync(expenses);
+
+                    Account account = await _dbContext.Account.FirstOrDefaultAsync();
+                    account.Balance -= expenses.Sum(x => x.Amount);
+
+                    result = await _dbContext.SaveChangesAsync();
+                    await dbContextTransaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await dbContextTransaction.RollbackAsync();
+                }
+            }
+
+            return result;
         }
 
         public async Task<Expense> GetByIdAsync(int Id)
@@ -42,19 +83,62 @@ namespace HomeBudgetManagement.Api.Core.Services
 
         public async Task<int> SaveAsync(Expense expense)
         {
-            _dbContext.Entry(expense).State = EntityState.Modified;
-            return await _dbContext.SaveChangesAsync();
+            int result = 0;
+
+            using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    Expense expenseFromDb = _dbContext.Expenses.Find(expense.Id);
+                    EntityEntry<Expense> entry = _dbContext.Entry<Expense>(expenseFromDb);
+                
+                    Account account = await _dbContext.Account.FirstOrDefaultAsync();
+                    //Add the original balance for correct balance calculation
+                    account.Balance += Convert.ToDouble(entry.OriginalValues["Amount"]);
+                    account.Balance -= expense.Amount;
+
+                    entry.Property(x => x.Amount).CurrentValue = expense.Amount;
+                    entry.State = EntityState.Modified;
+
+                    result = await _dbContext.SaveChangesAsync();
+                    await dbContextTransaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+
+                    await dbContextTransaction.RollbackAsync();
+                }
+            }
+
+            return result;
         }
 
         public async Task<int> RemoveAsync(int id)
         {
-            Expense expense = await _dbContext.Expenses.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if (expense != null)
+            int result = 0;
+            using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
             {
-                _dbContext.Expenses.Remove(expense);
-                return await _dbContext.SaveChangesAsync();
+                try
+                {
+                    Expense expense = await _dbContext.Expenses.Where(x => x.Id == id).FirstOrDefaultAsync();
+                    if (expense != null)
+                    {
+                        _dbContext.Expenses.Remove(expense);
+
+                        Account account = await _dbContext.Account.FirstOrDefaultAsync();
+                        account.Balance += expense.Amount;
+
+                        result = await _dbContext.SaveChangesAsync();
+                        await dbContextTransaction.CommitAsync();
+                    }
+                }
+                catch (Exception)
+                {
+                    await dbContextTransaction.RollbackAsync();
+                }
             }
-            else return 0;
+
+            return result;
         }
     }
 }

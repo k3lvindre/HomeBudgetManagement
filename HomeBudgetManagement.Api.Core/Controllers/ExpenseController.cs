@@ -15,10 +15,12 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     public class ExpenseController : ControllerBase
     {
         private readonly IExpenseRepository _expenseRepository;
+        private readonly IAccountRepository _accountRepository;
 
-        public ExpenseController(IExpenseRepository expenseRepository)
+        public ExpenseController(IExpenseRepository expenseRepository, IAccountRepository accountRepository)
         {
             _expenseRepository = expenseRepository;
+            _accountRepository = accountRepository;
         }
 
         [HttpGet("List")]
@@ -46,24 +48,36 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPost("PostExpense")]
         public async Task<IActionResult> AddExpense([FromBody] Expense expense)
         {
-            expense =  await _expenseRepository.AddAsync(expense);
-            if (expense.Id > 0)
+            Account account = await _accountRepository.GetAccountAsync();
+            if(account.Balance >= expense.Amount)
             {
-                return Accepted();
+                expense = await _expenseRepository.AddAsync(expense);
+                if (expense.Id > 0)
+                {
+                    return Accepted();
+                }
+                else return BadRequest();
             }
-            else return BadRequest();
+            else return BadRequest("Insuficient Balance!");
+
         }
 
         [HttpPut("UpdateExpense")]
         public async Task<IActionResult> UpdateExpense([FromBody] Expense expense)
         {
-            int result = await _expenseRepository.SaveAsync(expense);
-
-            if (result > 0)
+            Account account = await _accountRepository.GetAccountAsync();
+            if (account.Balance >= expense.Amount)
             {
-                return Accepted();
-            }
-            else return BadRequest();
+                int result = await _expenseRepository.SaveAsync(expense);
+                if (result > 0)
+                {
+                    return Accepted();
+                }
+                else return BadRequest();
+            } 
+            else return BadRequest("Insuficient Balance!");
+
+
 
         }
 

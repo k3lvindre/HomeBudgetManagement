@@ -35,6 +35,7 @@ namespace HomeBudgetManagement.Api.Core
             services.AddDbContext<HomeBudgetManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HbmConnectionString")), ServiceLifetime.Scoped);
 
             services.AddTransient<IExpenseRepository, ExpenseRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
