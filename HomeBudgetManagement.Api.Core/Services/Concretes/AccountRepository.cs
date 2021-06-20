@@ -17,7 +17,7 @@ namespace HomeBudgetManagement.Api.Core.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Account> GetAccountAsync()
+        public async Task<Account> GetFirstAccountAsync()
         {
             if(!_dbContext.Account.Any())
             {

@@ -24,7 +24,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAccount()
         {
-            Account account = await _accountRepository.GetAccountAsync();
+            Account account = await _accountRepository.GetFirstAccountAsync();
             if(account != null)
             {
                 return Ok(account);

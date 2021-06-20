@@ -48,7 +48,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPost("PostExpense")]
         public async Task<IActionResult> AddExpense([FromBody] Expense expense)
         {
-            Account account = await _accountRepository.GetAccountAsync();
+            Account account = await _accountRepository.GetFirstAccountAsync();
             if(account.Balance >= expense.Amount)
             {
                 expense = await _expenseRepository.AddAsync(expense);
@@ -65,7 +65,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPut("UpdateExpense")]
         public async Task<IActionResult> UpdateExpense([FromBody] Expense expense)
         {
-            Account account = await _accountRepository.GetAccountAsync();
+            Account account = await _accountRepository.GetFirstAccountAsync();
             if (account.Balance >= expense.Amount)
             {
                 int result = await _expenseRepository.SaveAsync(expense);

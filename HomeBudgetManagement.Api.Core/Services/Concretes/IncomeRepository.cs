@@ -10,48 +10,48 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HomeBudgetManagement.Api.Core.Services
 {
-    public class ExpenseRepository : IExpenseRepository
+    public class IncomeRepository : IIncomeRepository
     {
         private readonly HomeBudgetManagementDbContext _dbContext;
         private readonly IAccountRepository _accountRepository;
 
-        public ExpenseRepository(HomeBudgetManagementDbContext dbContext,
+        public IncomeRepository(HomeBudgetManagementDbContext dbContext,
             IAccountRepository accountRepository)
         {
             _dbContext = dbContext;
             _accountRepository = accountRepository;
         }
-      
-        public async Task<List<Expense>> GetAllAsync()
+
+        public async Task<List<Income>> GetAllAsync()
         {
-            return await _dbContext.Expenses.ToListAsync();
+            return await _dbContext.Incomes.ToListAsync();
         }
 
-        public async Task<Expense> AddAsync(Expense expense)
+        public async Task<Income> AddAsync(Income income)
         {
-          
+
             using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    await _dbContext.Expenses.AddAsync(expense);
-                    
+                    await _dbContext.Incomes.AddAsync(income);
+
                     Account account = await _accountRepository.GetFirstAccountAsync();
-                    account.Balance -= expense.Amount;
+                    account.Balance += income.Amount;
 
                     await _dbContext.SaveChangesAsync();
                     await dbContextTransaction.CommitAsync();
                 }
                 catch (Exception)
                 {
-                   await dbContextTransaction.RollbackAsync();
+                    await dbContextTransaction.RollbackAsync();
                 }
             }
 
-            return expense;
+            return income;
         }
 
-        public async Task<int> AddRangeAsync(List<Expense> expenses)
+        public async Task<int> AddRangeAsync(List<Income> incomes)
         {
             int result = 0;
 
@@ -59,10 +59,10 @@ namespace HomeBudgetManagement.Api.Core.Services
             {
                 try
                 {
-                    await _dbContext.Expenses.AddRangeAsync(expenses);
+                    await _dbContext.Incomes.AddRangeAsync(incomes);
 
                     Account account = await _accountRepository.GetFirstAccountAsync();
-                    account.Balance -= expenses.Sum(x => x.Amount);
+                    account.Balance += incomes.Sum(x => x.Amount);
 
                     result = await _dbContext.SaveChangesAsync();
                     await dbContextTransaction.CommitAsync();
@@ -76,12 +76,12 @@ namespace HomeBudgetManagement.Api.Core.Services
             return result;
         }
 
-        public async Task<Expense> GetByIdAsync(int Id)
+        public async Task<Income> GetByIdAsync(int Id)
         {
-            return await _dbContext.Expenses.FindAsync(Id);
+            return await _dbContext.Incomes.FindAsync(Id);
         }
 
-        public async Task<int> SaveAsync(Expense expense)
+        public async Task<int> SaveAsync(Income income)
         {
             int result = 0;
 
@@ -89,15 +89,15 @@ namespace HomeBudgetManagement.Api.Core.Services
             {
                 try
                 {
-                    Expense expenseFromDb = await _dbContext.Expenses.FindAsync(expense.Id);
-                    EntityEntry<Expense> entry = _dbContext.Entry<Expense>(expenseFromDb);
-                
+                    Income incomeFromDb = await _dbContext.Incomes.FindAsync(income.Id);
+                    EntityEntry<Income> entry = _dbContext.Entry<Income>(incomeFromDb);
+
                     Account account = await _accountRepository.GetFirstAccountAsync();
                     //Add the original balance for correct balance calculation
-                    account.Balance += Convert.ToDouble(entry.OriginalValues["Amount"]);
-                    account.Balance -= expense.Amount;
+                    account.Balance -= Convert.ToDouble(entry.OriginalValues["Amount"]);
+                    account.Balance += income.Amount;
 
-                    entry.Property(x => x.Amount).CurrentValue = expense.Amount;
+                    entry.Property(x => x.Amount).CurrentValue = income.Amount;
                     entry.State = EntityState.Modified;
 
                     result = await _dbContext.SaveChangesAsync();
@@ -120,13 +120,13 @@ namespace HomeBudgetManagement.Api.Core.Services
             {
                 try
                 {
-                    Expense expense = await _dbContext.Expenses.FindAsync(id);
-                    if (expense != null)
+                    Income income = await _dbContext.Incomes.FindAsync(id);
+                    if (income != null)
                     {
-                        _dbContext.Expenses.Remove(expense);
+                        _dbContext.Incomes.Remove(income);
 
                         Account account = await _accountRepository.GetFirstAccountAsync();
-                        account.Balance += expense.Amount;
+                        account.Balance -= income.Amount;
 
                         result = await _dbContext.SaveChangesAsync();
                         await dbContextTransaction.CommitAsync();

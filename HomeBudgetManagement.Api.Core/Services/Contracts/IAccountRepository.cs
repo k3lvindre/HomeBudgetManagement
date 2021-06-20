@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.Api.Core.Services
 {
-    public interface IAccountRepository
+    public interface IAccountRepository 
     {
-        Task<Account> GetAccountAsync();
         Task<int> UpdateAccountAsync(Account account);
+        Task<Account> GetFirstAccountAsync();
     }
 }
