@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HomeBudgetManagement.Models;
+﻿using HomeBudgetManagement.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudgetManagement.Api.Core.Data

@@ -16,7 +16,7 @@ namespace HomeBudgetManagement.Api.Core.Services
         private readonly IAccountRepository _accountRepository;
 
         public ExpenseRepository(HomeBudgetManagementDbContext dbContext,
-            IAccountRepository accountRepository)
+                                 IAccountRepository accountRepository)
         {
             _dbContext = dbContext;
             _accountRepository = accountRepository;

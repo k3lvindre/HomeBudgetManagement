@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +16,8 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         private readonly IExpenseRepository _expenseRepository;
         private readonly IAccountRepository _accountRepository;
 
-        public ExpenseController(IExpenseRepository expenseRepository, IAccountRepository accountRepository)
+        public ExpenseController(IExpenseRepository expenseRepository,
+                                 IAccountRepository accountRepository)
         {
             _expenseRepository = expenseRepository;
             _accountRepository = accountRepository;
@@ -59,7 +59,6 @@ namespace HomeBudgetManagement.Api.Core.Controllers
                 else return BadRequest();
             }
             else return BadRequest("Insuficient Balance!");
-
         }
 
         [HttpPut("UpdateExpense")]
@@ -76,9 +75,6 @@ namespace HomeBudgetManagement.Api.Core.Controllers
                 else return BadRequest();
             } 
             else return BadRequest("Insuficient Balance!");
-
-
-
         }
 
         [HttpDelete("Delete/{id}")]
