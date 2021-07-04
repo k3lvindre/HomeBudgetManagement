@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using HomeBudgetManagement.Domain;
 using HomeBudgetManagement.Models;
 
@@ -29,13 +20,17 @@ namespace HomeBudgetManagement.API.Controllers
         [HttpGet, Route("Get")]
         public async Task<IHttpActionResult> GetAccount()
         {
-            Account account = await _accountRepository.GetAsync();
-            if (account == null)
+            using(_accountRepository)
             {
-                return NotFound();
-            }
+                Account account = await _accountRepository.GetAsync();
+                if (account == null)
+                {
+                    return NotFound();
+                }
 
-            return Ok(account);
+                return Ok(account);
+            }
+           
         }
     }
 }

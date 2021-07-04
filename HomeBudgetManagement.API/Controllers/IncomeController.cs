@@ -3,9 +3,6 @@ using HomeBudgetManagement.Models;
 using HomeBudgetManagement.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.Threading;
-using System.Linq;
 
 namespace HomeBudgetManagement.API.Controllers
 {

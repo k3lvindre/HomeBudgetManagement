@@ -15,9 +15,9 @@ namespace HomeBudgetManagement.API
             // Web API configuration and services
             //Dependency injection using unity
             var container = new UnityContainer();
-            container.RegisterType<IExpenseRepository, ExpenseRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<IIncomeRepository, IncomeRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<IAccountRepository, AccountRepository>(new HierarchicalLifetimeManager());
+            container.RegisterType<IExpenseRepository, ExpenseRepository>();
+            container.RegisterType<IIncomeRepository, IncomeRepository>();
+            container.RegisterType<IAccountRepository, AccountRepository>();
             config.DependencyResolver = new UnityResolver(container);
 
             // Web API routes
