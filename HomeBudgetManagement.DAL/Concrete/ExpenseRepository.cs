@@ -33,7 +33,7 @@ namespace HomeBudgetManagement.Domain
                 {
                     _homeBudgetManagementContext.Expenses.Add(entity);
 
-                    await _accountRepository.DeductFromBalanceAsync(entity.Amount);
+                    await _accountRepository.DeductBalanceAsync(entity.Amount);
 
                     await _homeBudgetManagementContext.SaveChangesAsync();
                     transaction.Commit();
@@ -55,7 +55,7 @@ namespace HomeBudgetManagement.Domain
                 {
                     _homeBudgetManagementContext.Expenses.AddRange(entities);
 
-                    await _accountRepository.DeductFromBalanceAsync(entities.Select(e => e.Amount).Sum());
+                    await _accountRepository.DeductBalanceAsync(entities.Select(e => e.Amount).Sum());
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
                     transaction.Commit();

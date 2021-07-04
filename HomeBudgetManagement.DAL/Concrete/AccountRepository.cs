@@ -55,21 +55,20 @@ namespace HomeBudgetManagement.Domain
             if(account != null)
             {
                 account.Balance += amount;
+              
+                if(save) await SaveAsync(account);
             }
-
-            if(save) await SaveAsync(account);
         }
 
-        public async Task DeductFromBalanceAsync(double amount, bool save = false)
+        public async Task DeductBalanceAsync(double amount, bool save = false)
         {
             Account account = await _dbContext.Accounts.FirstOrDefaultAsync();
 
-            if(account != null)
+            if(account?.Balance >= amount)
             {
                 account.Balance -= amount;
+                if (save) await SaveAsync(account);
             }
-
-            if(save) await SaveAsync(account);
         }
 
         public async Task UpdateBalanceAsync(double amountToAdd, double amountToDeduct, bool save = false)
@@ -79,10 +78,11 @@ namespace HomeBudgetManagement.Domain
             if(account != null)
             {
                 account.Balance += amountToAdd;
-                account.Balance -= amountToDeduct;
+                if(account.Balance >= amountToDeduct) account.Balance -= amountToDeduct;
+
+                if(save) await SaveAsync(account);
             }
 
-            if(save) await SaveAsync(account);
         }
 
         //Implement Idisposable,  We can also implement "`Finalize" to override GC memory handling but it take some time.

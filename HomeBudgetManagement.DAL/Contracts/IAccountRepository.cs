@@ -12,7 +12,7 @@ namespace HomeBudgetManagement.Domain
       Task<Account> GetAsync();
       Task<bool> SaveAsync(Account account);
       Task AddBalanceAsync(double amount, bool save = false);
-      Task DeductFromBalanceAsync(double amount, bool save = false);
+      Task DeductBalanceAsync(double amount, bool save = false);
       Task UpdateBalanceAsync(double amountToAdd, double amountToDeduct, bool save = false);
     }
 }

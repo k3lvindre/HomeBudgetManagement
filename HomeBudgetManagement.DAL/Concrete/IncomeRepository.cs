@@ -81,7 +81,7 @@ namespace HomeBudgetManagement.Domain
                 {
                     _homeBudgetManagementContext.Entry<Income>(identity).State = EntityState.Deleted;
 
-                    await _accountRepository.DeductFromBalanceAsync(identity.Amount);
+                    await _accountRepository.DeductBalanceAsync(identity.Amount);
 
                     int result =  await _homeBudgetManagementContext.SaveChangesAsync();
                     transaction.Commit();
@@ -106,7 +106,7 @@ namespace HomeBudgetManagement.Domain
                         _homeBudgetManagementContext.Entry<Income>(item).State = EntityState.Deleted;
                     }
 
-                    await _accountRepository.DeductFromBalanceAsync(range.Select(e => e.Amount).CustomSum()); //used my custom extension method
+                    await _accountRepository.DeductBalanceAsync(range.Select(e => e.Amount).CustomSum()); //used my custom extension method
 
 
                     int result = await _homeBudgetManagementContext.SaveChangesAsync();
