@@ -40,6 +40,7 @@ namespace HomeBudgetManagement.Api.Core
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IIncomeRepository, IncomeRepository>(); 
+            services.AddScoped<IIncomeSummary, IncomeSummary>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
