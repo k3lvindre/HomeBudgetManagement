@@ -10,11 +10,11 @@ namespace HomeBudgetManagement.Api.Core.Controllers
 {
     [Route("SummaryReport")]
     [ApiController]
-    public class SummaryController : Controller
+    public class SummaryReportController : Controller
     {
         private readonly IIncomeSummary _incomeSummary;
 
-        public SummaryController(IIncomeSummary incomeSummary)
+        public SummaryReportController(IIncomeSummary incomeSummary)
         {
             _incomeSummary = incomeSummary;
         }
@@ -23,6 +23,12 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         public async Task<IActionResult> Index(int month)
         {
             return Ok(await _incomeSummary.GetItemsByMonthAsync(month));
+        }
+
+        [HttpPost("GetIncomeByDateRange")]
+        public async Task<IActionResult> Index(DateTime from, DateTime to)
+        {
+            return Ok(await _incomeSummary.GetItemsByDateRangeAsync(from, to));
         }
     }
 }
