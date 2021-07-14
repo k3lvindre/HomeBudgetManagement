@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using HomeBudgetManagement.Models;
+using System.Text;
 
 namespace HomeBudgetManagement.MVC.Core
 {
@@ -45,9 +46,21 @@ namespace HomeBudgetManagement.MVC.Core
         }
 
         [HttpGet]
-        public IActionResult IncomeFilterByDateRange(DateTime dateFrom, DateTime dateTo)
+        public async Task<IActionResult> IncomeFilterByDateRange(DateTime dateFrom, DateTime dateTo)
         {
-            return View("IncomeSummaryReport", new List<Income>());
+            List<Income> incomes = new List<Income>();
+
+            HttpContent param = new StringContent(JsonSerializer.Serialize(new { from = dateFrom, to = dateTo }) , Encoding.Default, _homeBudgetManagementApiConfig.MediaType);
+            HttpResponseMessage result = await _httpClient.PostAsync($"SummaryReport/GetIncomeByDateRange?from={dateFrom}&to={dateTo}", param);
+
+            if (result.IsSuccessStatusCode)
+            {
+                incomes = JsonSerializer.Deserialize<List<Income>>(await result.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            }
+
+            ViewBag.Total = incomes.Sum(x => x.Amount);
+
+            return View("IncomeSummaryReport", incomes);
         }
     }
 }
