@@ -68,7 +68,8 @@ namespace HomeBudgetManagementWinForms
             dgvList.DataSource = await expenseService.GetAllExpensesAsync();
 
             AccountService service = new AccountService();
-            Account account = await service.GetAccountAsync();
+            //Account account = await service.GetAccountAsync();
+            Account account = await service.GetAccountV2Async();
             //replace this delegate invokecation with event
             //handler();
             //newHandler?.Invoke(this, new AccountEventArgs(account.Balance));
@@ -210,9 +211,15 @@ namespace HomeBudgetManagementWinForms
             Expense ex = await expenseService.GetById(Convert.ToInt32(txtId.Text));
             expenseService = new ExpenseService();
             byte[] file = await expenseService.DownloadFile(ex.Id);
-
-            File.WriteAllBytes($"{Application.StartupPath}\\{ex.FileExtension}", file);
-            System.Diagnostics.Process.Start(Application.StartupPath + "\\" + ex.FileExtension);
+            if(file == null)
+            {
+                MessageBox.Show("No File Found!");
+            }
+            else
+            {
+                File.WriteAllBytes($"{Application.StartupPath}\\{ex.FileExtension}", file);
+                System.Diagnostics.Process.Start(Application.StartupPath + "\\" + ex.FileExtension);
+            }
         }
     }
 
