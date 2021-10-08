@@ -26,6 +26,8 @@ namespace HomeBudgetManagement.Api.Core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
+                //fix case sensitivity of properties of returned entity from the controller when consumed by client
+                //during deserialization
                 .AddJsonOptions(x=>  {
                     x.JsonSerializerOptions.PropertyNamingPolicy = null;
                  });

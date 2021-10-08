@@ -46,5 +46,10 @@ namespace HomeBudgetManagementWinForms
             System.Diagnostics.Debug.WriteLine(sender.ToString());
             toolStripBalance.Text = "Balance: " + e.Balance.ToString();
         }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

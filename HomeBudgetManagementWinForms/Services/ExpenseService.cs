@@ -25,7 +25,7 @@ namespace HomeBudgetManagementWinForms.Services
             List<Expense> expenses = new List<Expense>();
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.GetAsync("api/Expense/List");
+                HttpResponseMessage result = await httpClient.GetAsync("Expense/List");
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -40,7 +40,7 @@ namespace HomeBudgetManagementWinForms.Services
             Expense expenses = new Expense();
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.GetAsync("api/Expense/" + id);
+                HttpResponseMessage result = await httpClient.GetAsync("Expense/" + id);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -57,7 +57,7 @@ namespace HomeBudgetManagementWinForms.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent param = new StringContent(JsonSerializer.Serialize<Expense>(expense),Encoding.Default,"application/json");
 
-                HttpResponseMessage result = await httpClient.PostAsync("api/Expense/PostExpense", param);
+                HttpResponseMessage result = await httpClient.PostAsync("Expense/PostExpense", param);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -74,7 +74,7 @@ namespace HomeBudgetManagementWinForms.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent param = new StringContent(JsonSerializer.Serialize<Expense>(expense),Encoding.Default,"application/json");
 
-                HttpResponseMessage result = await httpClient.PutAsync("api/Expense/UpdateExpense", param);
+                HttpResponseMessage result = await httpClient.PutAsync("Expense/UpdateExpense", param);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -88,7 +88,7 @@ namespace HomeBudgetManagementWinForms.Services
         {
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.DeleteAsync($"api/Expense/Delete/{id}");
+                HttpResponseMessage result = await httpClient.DeleteAsync($"Expense/Delete/{id}");
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -106,7 +106,7 @@ namespace HomeBudgetManagementWinForms.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent param = new StringContent(JsonSerializer.Serialize<List<Expense>>(expenses),Encoding.Default,"application/json");
 
-                HttpResponseMessage result = await httpClient.PostAsync("api/Expense/DeleteRange", param);
+                HttpResponseMessage result = await httpClient.PostAsync("Expense/DeleteRange", param);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -121,7 +121,7 @@ namespace HomeBudgetManagementWinForms.Services
         {
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.GetAsync("api/Expense/downloadfile/" + id);
+                HttpResponseMessage result = await httpClient.GetAsync("Expense/downloadfile/" + id);
 
                 if (result.IsSuccessStatusCode)
                 {

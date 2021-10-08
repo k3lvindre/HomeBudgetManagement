@@ -30,7 +30,7 @@ namespace HomeBudgetManagementWinForms.Services
                 byte[] authToken = Encoding.ASCII.GetBytes("kelvin:password");
                 _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
 
-                HttpResponseMessage result = await _client.GetAsync("api/Account/Get");
+                HttpResponseMessage result = await _client.GetAsync("Account/Get");
                 if (result.IsSuccessStatusCode)
                 {
                     Account account = JsonSerializer.Deserialize<Account>(await result.Content.ReadAsStringAsync());
@@ -38,6 +38,22 @@ namespace HomeBudgetManagementWinForms.Services
                 }
             }
            
+            return null;
+        }
+
+
+        public async Task<Account> GetAccountV2Async()
+        {
+            using (_client)
+            {
+                HttpResponseMessage result = await _client.GetAsync("Account/GetAccount");
+                if (result.IsSuccessStatusCode)
+                {
+                    Account account = JsonSerializer.Deserialize<Account>(await result.Content.ReadAsStringAsync());
+                    return account;
+                }
+            }
+
             return null;
         }
     }

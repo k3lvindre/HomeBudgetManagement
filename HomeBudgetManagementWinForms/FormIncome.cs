@@ -29,13 +29,10 @@ namespace HomeBudgetManagementWinForms
             DataGridView dgv = sender as DataGridView;
             if(dgv != null)
             {
+                dgv.Columns.Remove("File");
+                dgv.Columns.Remove("FileExtension");
                 lblTotalAmount.Text = dgv.Sum().ToString();
             }
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void Incomes_Load(object sender, EventArgs e)
@@ -60,7 +57,8 @@ namespace HomeBudgetManagementWinForms
             dgvList.DataSource = await IncomeService.GetAllIncomesAsync();
 
             AccountService accountService = new AccountService();
-            Account account = await accountService.GetAccountAsync();
+            //Account account = await accountService.GetAccountAsync();
+            Account account = await accountService.GetAccountV2Async();
             AccountUpdated.Invoke(this, new AccountEventArgs(account.Balance));
         }
 
@@ -74,24 +72,19 @@ namespace HomeBudgetManagementWinForms
             {
                 foreach (DataGridViewRow item in dgvList.SelectedRows)
                 {
-                    range.Add(new Income()
-                    {
-                        Id = (int)item.Cells["Id"].Value,
-                        Amount = (double)item.Cells["Amount"].Value,
-                        Date = (DateTime)item.Cells["Date"].Value,
-                        Description = (string)item.Cells["Description"].Value
-                    });
+                    Income income = ConvertDatagridviewrow(item);
+                    range.Add(income);
                 }
-
-                result = await IncomeService.DeleteRangeIncome(range);
             }
             else if(dgvList.SelectedRows.Count == 1)
             {
-                int id = (int)dgvList.SelectedRows[0].Cells["Id"].Value;
-                result = await IncomeService.DeleteIncome(id);
+                Income income = ConvertDatagridviewrow(dgvList.SelectedRows[0]);
+                range.Add(income);
             }
 
-            if(result) {
+            result = await IncomeService.DeleteRangeIncome(range);
+
+            if (result) {
                 MessageBox.Show("Deleted");
                 GetIncomes();
             }
@@ -100,13 +93,14 @@ namespace HomeBudgetManagementWinForms
         private void dgvList_RowEnter(object sender, DataGridViewCellEventArgs e)
         {
             btnSave.Enabled = dgvList.SelectedRows.Count == 1;
-            if(btnSave.Enabled)
+            if (btnSave.Enabled)
             {
                 DataGridViewRow row = dgvList.SelectedRows[0];
-                txtId.Text = row.Cells["Id"].Value.ToString();
-                txtAmount.Text = row.Cells["Amount"].Value.ToString();
-                txtDescription.Text = row.Cells["Description"].Value.ToString();
-                dateTimePicker1.Value = Convert.ToDateTime(row.Cells["Date"].Value);
+                Income income = ConvertDatagridviewrow(row);
+                txtId.Text = income.Id.ToString();
+                txtAmount.Text = income.Amount.ToString();
+                txtDescription.Text = income.Description.ToString();
+                dateTimePicker1.Value = income.Date;
             }
         }
 
@@ -114,7 +108,7 @@ namespace HomeBudgetManagementWinForms
         {
             IncomeService IncomeService = new IncomeService();
             bool result = false;
-            Income Income = new Income()
+            Income income = new Income()
             {
                 Id = Convert.ToInt32(txtId.Text),
                 Amount = Convert.ToDouble(txtAmount.Text),
@@ -122,17 +116,17 @@ namespace HomeBudgetManagementWinForms
                 Date = dateTimePicker1.Value
             };
 
-            if(Income.Id > 0)
+            if(income.Id > 0)
             {
-                if (await IncomeService.UpdateIncome(Income))
+                if (await IncomeService.UpdateIncome(income))
                 {
                     MessageBox.Show("Updated");
                     result = true;
                 }
             } else
             {
-                Income = await IncomeService.CreateIncome(Income);
-                if (Income.Id > 0)
+                income = await IncomeService.CreateIncome(income);
+                if (income.Id > 0)
                 {
                     MessageBox.Show("Created");
                     result = true;
@@ -190,23 +184,36 @@ namespace HomeBudgetManagementWinForms
             }
         }
 
-        private async  void btnDownloadFile_Click(object sender, EventArgs e)
+        private async void btnDownloadFile_Click(object sender, EventArgs e)
         {
             IncomeService incomeService = new IncomeService();
             Income ex = await incomeService.GetById(Convert.ToInt32(txtId.Text));
+
+            //reinstantiate because httpt client is being disposed which needs to fix
             incomeService = new IncomeService();
+
             byte[] file = await incomeService.DownloadFile(ex.Id);
-
-            File.WriteAllBytes(Application.StartupPath + "\\" + ex.FileExtension, file);
-            System.Diagnostics.Process.Start(Application.StartupPath + "\\" + ex.FileExtension);
+            if (file == null)
+            {
+                MessageBox.Show("No File Found!");
+            }
+            else
+            {
+                File.WriteAllBytes(Application.StartupPath + "\\" + ex.FileExtension, file);
+                System.Diagnostics.Process.Start(Application.StartupPath + "\\" + ex.FileExtension);
+            }
         }
-
-        private void dgvList_DataSourceChanged_1(object sender, EventArgs e)
+        private Income ConvertDatagridviewrow(DataGridViewRow dgvRow) 
         {
-            dgvList.Columns.Remove("File");
-            dgvList.Columns.Remove("FileExtension");
-
+            return new Income()
+            {
+                Id = (int)dgvRow.Cells["Id"].Value,
+                Amount = (double)dgvRow.Cells["Amount"].Value,
+                Date = (DateTime)dgvRow.Cells["Date"].Value,
+                Description = (string)dgvRow.Cells["Description"].Value
+            };
         }
+
     }
 
 }

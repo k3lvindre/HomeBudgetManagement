@@ -31,9 +31,12 @@ namespace HomeBudgetManagementWinForms
 
         private void DgvList_DataSourceChanged(object sender, EventArgs e)
         {
+     
             DataGridView dgv = sender as DataGridView;
             if(dgv != null)
             {
+                dgv.Columns.Remove("File");
+                dgv.Columns.Remove("FileExtension");
                 lblTotalAmount.Text = dgv.Sum().ToString();
             }
         }
@@ -103,7 +106,9 @@ namespace HomeBudgetManagementWinForms
             if(result) {
                 MessageBox.Show("Deleted");
                 GetExpenses();
-            }
+            } 
+            else
+                MessageBox.Show("Unable to Delete");
         }
 
         private void dgvList_RowEnter(object sender, DataGridViewCellEventArgs e)
@@ -208,13 +213,6 @@ namespace HomeBudgetManagementWinForms
 
             File.WriteAllBytes($"{Application.StartupPath}\\{ex.FileExtension}", file);
             System.Diagnostics.Process.Start(Application.StartupPath + "\\" + ex.FileExtension);
-        }
-
-        private void dgvList_DataSourceChanged_1(object sender, EventArgs e)
-        {
-            dgvList.Columns.Remove("File");
-            dgvList.Columns.Remove("FileExtension");
-
         }
     }
 

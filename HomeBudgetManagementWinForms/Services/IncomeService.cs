@@ -25,7 +25,7 @@ namespace HomeBudgetManagementWinForms.Services
             List<Income> Incomes = new List<Income>();
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.GetAsync("api/Income/List");
+                HttpResponseMessage result = await httpClient.GetAsync("Income/List");
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -40,7 +40,7 @@ namespace HomeBudgetManagementWinForms.Services
             Income Incomes = new Income();
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.GetAsync("api/Income/" + id);
+                HttpResponseMessage result = await httpClient.GetAsync("Income/" + id);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -57,7 +57,7 @@ namespace HomeBudgetManagementWinForms.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent param = new StringContent(JsonSerializer.Serialize<Income>(Income),Encoding.Default,"application/json");
 
-                HttpResponseMessage result = await httpClient.PostAsync("api/Income/PostIncome", param);
+                HttpResponseMessage result = await httpClient.PostAsync("Income/PostIncome", param);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -74,7 +74,7 @@ namespace HomeBudgetManagementWinForms.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent param = new StringContent(JsonSerializer.Serialize<Income>(Income),Encoding.Default,"application/json");
 
-                HttpResponseMessage result = await httpClient.PutAsync("api/Income/UpdateIncome", param);
+                HttpResponseMessage result = await httpClient.PutAsync("Income/UpdateIncome", param);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -88,7 +88,7 @@ namespace HomeBudgetManagementWinForms.Services
         {
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.DeleteAsync($"api/Income/Delete/{id}");
+                HttpResponseMessage result = await httpClient.DeleteAsync($"Income/Delete/{id}");
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -106,7 +106,7 @@ namespace HomeBudgetManagementWinForms.Services
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent param = new StringContent(JsonSerializer.Serialize<List<Income>>(Incomes),Encoding.Default,"application/json");
 
-                HttpResponseMessage result = await httpClient.PostAsync("api/Income/DeleteRange", param);
+                HttpResponseMessage result = await httpClient.PostAsync("Income/DeleteRange", param);
 
                 if(result.IsSuccessStatusCode)
                 {
@@ -121,7 +121,7 @@ namespace HomeBudgetManagementWinForms.Services
         {
             using (httpClient)
             {
-                HttpResponseMessage result = await httpClient.GetAsync("api/Income/downloadfile/" + id);
+                HttpResponseMessage result = await httpClient.GetAsync("Income/downloadfile/" + id);
 
                 if (result.IsSuccessStatusCode)
                 {
@@ -130,5 +130,6 @@ namespace HomeBudgetManagementWinForms.Services
             }
             return null;
         }
+
     }
 }

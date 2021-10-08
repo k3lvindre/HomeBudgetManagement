@@ -60,7 +60,7 @@
             this.dgvList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvList.Size = new System.Drawing.Size(776, 279);
             this.dgvList.TabIndex = 0;
-            this.dgvList.DataSourceChanged += new System.EventHandler(this.dgvList_DataSourceChanged_1);
+            //this.dgvList.DataSourceChanged += new System.EventHandler(this.dgvList_DataSourceChanged_1);
             this.dgvList.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvList_RowEnter);
             // 
             // btnAdd
