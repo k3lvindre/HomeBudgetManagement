@@ -189,9 +189,6 @@ namespace HomeBudgetManagementWinForms
             IncomeService incomeService = new IncomeService();
             Income ex = await incomeService.GetById(Convert.ToInt32(txtId.Text));
 
-            //reinstantiate because httpt client is being disposed which needs to fix
-            incomeService = new IncomeService();
-
             byte[] file = await incomeService.DownloadFile(ex.Id);
             if (file == null)
             {
@@ -213,7 +210,6 @@ namespace HomeBudgetManagementWinForms
                 Description = (string)dgvRow.Cells["Description"].Value
             };
         }
-
     }
 
 }

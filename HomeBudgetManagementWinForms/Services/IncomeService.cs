@@ -23,14 +23,12 @@ namespace HomeBudgetManagementWinForms.Services
         public async Task<List<Income>> GetAllIncomesAsync()
         {
             List<Income> Incomes = new List<Income>();
-            using (httpClient)
-            {
-                HttpResponseMessage result = await httpClient.GetAsync("Income/List");
+          
+            HttpResponseMessage result = await httpClient.GetAsync("Income/List");
 
-                if(result.IsSuccessStatusCode)
-                {
-                  Incomes =  JsonSerializer.Deserialize<List<Income>>(await result.Content.ReadAsStringAsync());
-                }
+            if(result.IsSuccessStatusCode)
+            {
+              Incomes =  JsonSerializer.Deserialize<List<Income>>(await result.Content.ReadAsStringAsync());
             }
             return Incomes;
         }
@@ -38,62 +36,56 @@ namespace HomeBudgetManagementWinForms.Services
         public async Task<Income> GetById(int id)
         {
             Income Incomes = new Income();
-            using (httpClient)
-            {
-                HttpResponseMessage result = await httpClient.GetAsync("Income/" + id);
+          
+            HttpResponseMessage result = await httpClient.GetAsync("Income/" + id);
 
-                if(result.IsSuccessStatusCode)
-                {
-                  Incomes =  JsonSerializer.Deserialize<Income>(await result.Content.ReadAsStringAsync());
-                }
+            if(result.IsSuccessStatusCode)
+            {
+              Incomes =  JsonSerializer.Deserialize<Income>(await result.Content.ReadAsStringAsync());
             }
+
             return Incomes;
         }
 
         public async Task<Income> CreateIncome(Income Income)
         {
-            using (httpClient)
+            
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpContent param = new StringContent(JsonSerializer.Serialize<Income>(Income),Encoding.Default,"application/json");
+
+            HttpResponseMessage result = await httpClient.PostAsync("Income/PostIncome", param);
+
+            if(result.IsSuccessStatusCode)
             {
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpContent param = new StringContent(JsonSerializer.Serialize<Income>(Income),Encoding.Default,"application/json");
-
-                HttpResponseMessage result = await httpClient.PostAsync("Income/PostIncome", param);
-
-                if(result.IsSuccessStatusCode)
-                {
-                  Income =  JsonSerializer.Deserialize<Income>(await result.Content.ReadAsStringAsync());
-                }
+              Income =  JsonSerializer.Deserialize<Income>(await result.Content.ReadAsStringAsync());
             }
+
             return Income;
         }
 
         public async Task<bool> UpdateIncome(Income Income)
         {
-            using (httpClient)
+            
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpContent param = new StringContent(JsonSerializer.Serialize<Income>(Income),Encoding.Default,"application/json");
+
+            HttpResponseMessage result = await httpClient.PutAsync("Income/UpdateIncome", param);
+
+            if(result.IsSuccessStatusCode)
             {
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpContent param = new StringContent(JsonSerializer.Serialize<Income>(Income),Encoding.Default,"application/json");
-
-                HttpResponseMessage result = await httpClient.PutAsync("Income/UpdateIncome", param);
-
-                if(result.IsSuccessStatusCode)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
 
         public async Task<bool> DeleteIncome(int id)
         {
-            using (httpClient)
-            {
-                HttpResponseMessage result = await httpClient.DeleteAsync($"Income/Delete/{id}");
+            
+            HttpResponseMessage result = await httpClient.DeleteAsync($"Income/Delete/{id}");
 
-                if(result.IsSuccessStatusCode)
-                {
-                    return true;
-                }
+            if(result.IsSuccessStatusCode)
+            {
+                return true;
             }
 
             return false;
@@ -101,17 +93,15 @@ namespace HomeBudgetManagementWinForms.Services
 
         public async Task<bool> DeleteRangeIncome(List<Income> Incomes)
         {
-            using (httpClient)
+            
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpContent param = new StringContent(JsonSerializer.Serialize<List<Income>>(Incomes),Encoding.Default,"application/json");
+
+            HttpResponseMessage result = await httpClient.PostAsync("Income/DeleteRange", param);
+
+            if(result.IsSuccessStatusCode)
             {
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpContent param = new StringContent(JsonSerializer.Serialize<List<Income>>(Incomes),Encoding.Default,"application/json");
-
-                HttpResponseMessage result = await httpClient.PostAsync("Income/DeleteRange", param);
-
-                if(result.IsSuccessStatusCode)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -119,15 +109,13 @@ namespace HomeBudgetManagementWinForms.Services
 
         public async Task<byte[]> DownloadFile(int id)
         {
-            using (httpClient)
-            {
-                HttpResponseMessage result = await httpClient.GetAsync("Income/downloadfile/" + id);
+            HttpResponseMessage result = await httpClient.GetAsync("Income/downloadfile/" + id);
 
-                if (result.IsSuccessStatusCode)
-                {
-                    return await result.Content.ReadAsByteArrayAsync();
-                }
+            if (result.IsSuccessStatusCode)
+            {
+                return await result.Content.ReadAsByteArrayAsync();
             }
+
             return null;
         }
 

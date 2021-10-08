@@ -209,8 +209,8 @@ namespace HomeBudgetManagementWinForms
         {
             ExpenseService expenseService = new ExpenseService();
             Expense ex = await expenseService.GetById(Convert.ToInt32(txtId.Text));
-            expenseService = new ExpenseService();
             byte[] file = await expenseService.DownloadFile(ex.Id);
+
             if(file == null)
             {
                 MessageBox.Show("No File Found!");

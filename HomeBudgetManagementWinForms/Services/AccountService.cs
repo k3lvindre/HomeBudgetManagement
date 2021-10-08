@@ -23,36 +23,29 @@ namespace HomeBudgetManagementWinForms.Services
 
         public async Task<Account> GetAccountAsync()
         {
-            using (_client)
+            _client.DefaultRequestHeaders.Add("api-key", "12345");
+
+            byte[] authToken = Encoding.ASCII.GetBytes("kelvin:password");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
+
+            HttpResponseMessage result = await _client.GetAsync("Account/Get");
+            if (result.IsSuccessStatusCode)
             {
-                _client.DefaultRequestHeaders.Add("api-key", "12345");
-
-                byte[] authToken = Encoding.ASCII.GetBytes("kelvin:password");
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authToken));
-
-                HttpResponseMessage result = await _client.GetAsync("Account/Get");
-                if (result.IsSuccessStatusCode)
-                {
-                    Account account = JsonSerializer.Deserialize<Account>(await result.Content.ReadAsStringAsync());
-                    return account;
-                }
+                Account account = JsonSerializer.Deserialize<Account>(await result.Content.ReadAsStringAsync());
+                return account;
             }
-           
             return null;
         }
 
 
         public async Task<Account> GetAccountV2Async()
         {
-            using (_client)
-            {
-                HttpResponseMessage result = await _client.GetAsync("Account/GetAccount");
-                if (result.IsSuccessStatusCode)
-                {
-                    Account account = JsonSerializer.Deserialize<Account>(await result.Content.ReadAsStringAsync());
-                    return account;
-                }
-            }
+           HttpResponseMessage result = await _client.GetAsync("Account/GetAccount");
+           if (result.IsSuccessStatusCode)
+           {
+               Account account = JsonSerializer.Deserialize<Account>(await result.Content.ReadAsStringAsync());
+               return account;
+           }
 
             return null;
         }
