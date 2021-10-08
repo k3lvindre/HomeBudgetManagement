@@ -36,7 +36,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                 {
                     await _dbContext.Expenses.AddAsync(expense);
                     
-                    Account account = await _accountRepository.GetFirstAccountAsync();
+                    Account account = await _accountRepository.GetAccountAsync();
                     account.Balance -= expense.Amount;
 
                     await _dbContext.SaveChangesAsync();
@@ -61,7 +61,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                 {
                     await _dbContext.Expenses.AddRangeAsync(expenses);
 
-                    Account account = await _accountRepository.GetFirstAccountAsync();
+                    Account account = await _accountRepository.GetAccountAsync();
                     account.Balance -= expenses.Sum(x => x.Amount);
 
                     result = await _dbContext.SaveChangesAsync();
@@ -92,7 +92,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                     Expense expenseFromDb = await _dbContext.Expenses.FindAsync(expense.Id);
                     EntityEntry<Expense> entry = _dbContext.Entry<Expense>(expenseFromDb);
                 
-                    Account account = await _accountRepository.GetFirstAccountAsync();
+                    Account account = await _accountRepository.GetAccountAsync();
                     //Add the original balance for correct balance calculation
                     account.Balance += Convert.ToDouble(entry.OriginalValues["Amount"]);
                     account.Balance -= expense.Amount;
@@ -125,7 +125,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                     {
                         _dbContext.Expenses.Remove(expense);
 
-                        Account account = await _accountRepository.GetFirstAccountAsync();
+                        Account account = await _accountRepository.GetAccountAsync();
                         account.Balance += expense.Amount;
 
                         result = await _dbContext.SaveChangesAsync();

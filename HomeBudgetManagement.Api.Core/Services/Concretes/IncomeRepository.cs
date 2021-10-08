@@ -36,7 +36,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                 {
                     await _dbContext.Incomes.AddAsync(income);
 
-                    Account account = await _accountRepository.GetFirstAccountAsync();
+                    Account account = await _accountRepository.GetAccountAsync();
                     account.Balance += income.Amount;
 
                     await _dbContext.SaveChangesAsync();
@@ -61,7 +61,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                 {
                     await _dbContext.Incomes.AddRangeAsync(incomes);
 
-                    Account account = await _accountRepository.GetFirstAccountAsync();
+                    Account account = await _accountRepository.GetAccountAsync();
                     account.Balance += incomes.Sum(x => x.Amount);
 
                     result = await _dbContext.SaveChangesAsync();
@@ -92,7 +92,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                     Income incomeFromDb = await _dbContext.Incomes.FindAsync(income.Id);
                     EntityEntry<Income> entry = _dbContext.Entry<Income>(incomeFromDb);
 
-                    Account account = await _accountRepository.GetFirstAccountAsync();
+                    Account account = await _accountRepository.GetAccountAsync();
                     //Add the original balance for correct balance calculation
                     account.Balance -= Convert.ToDouble(entry.OriginalValues["Amount"]);
                     account.Balance += income.Amount;
@@ -125,7 +125,7 @@ namespace HomeBudgetManagement.Api.Core.Services
                     {
                         _dbContext.Incomes.Remove(income);
 
-                        Account account = await _accountRepository.GetFirstAccountAsync();
+                        Account account = await _accountRepository.GetAccountAsync();
                         account.Balance -= income.Amount;
 
                         result = await _dbContext.SaveChangesAsync();

@@ -19,7 +19,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             _incomeSummary = incomeSummary;
         }
 
-        [HttpGet("GetIncomeByMonth/{month}")]
+        [HttpGet("GetIncomeByMonthOfCurrentYear/{month}")]
         public async Task<IActionResult> Index(int month)
         {
             return Ok(await _incomeSummary.GetItemsByMonthAsync(month));

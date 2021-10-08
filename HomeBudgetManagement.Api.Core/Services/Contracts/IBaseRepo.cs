@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.Api.Core.Services
 {
-    public interface IBaseRepo<T> where T : class
+    //Unlike in HomeBudgetManagement.API project here we removed the implementation of IDisposable because .net core handles the disposal by adding scoped or transient lifetime in startup
+    public interface IBaseRepo<T> where T : class //: IDisposable  
     {
         Task<List<T>> GetAllAsync();
         Task<T> GetByIdAsync(int Id);

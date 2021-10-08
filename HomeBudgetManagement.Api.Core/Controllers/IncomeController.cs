@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
@@ -46,34 +47,25 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPost("PostIncome")]
         public async Task<IActionResult> AddIncome([FromBody] Income income)
         {
-            Account account = await _accountRepository.GetFirstAccountAsync();
-            if (account.Balance >= income.Amount)
+            Account account = await _accountRepository.GetAccountAsync();
+            income = await _incomeRepository.AddAsync(income);
+            if (income.Id > 0)
             {
-                income = await _incomeRepository.AddAsync(income);
-                if (income.Id > 0)
-                {
-                    return Accepted();
-                }
-                else return BadRequest();
+                return Accepted();
             }
-            else return BadRequest("Insuficient Balance!");
-
+            else return BadRequest();
         }
 
         [HttpPut("UpdateIncome")]
         public async Task<IActionResult> UpdateIncome([FromBody] Income income)
         {
-            Account account = await _accountRepository.GetFirstAccountAsync();
-            if (account.Balance >= income.Amount)
+            Account account = await _accountRepository.GetAccountAsync();
+            int result = await _incomeRepository.SaveAsync(income);
+            if (result > 0)
             {
-                int result = await _incomeRepository.SaveAsync(income);
-                if (result > 0)
-                {
-                    return Accepted();
-                }
-                else return BadRequest();
+                return Accepted();
             }
-            else return BadRequest("Insuficient Balance!");
+            else return BadRequest();
         }
 
         [HttpDelete("Delete/{id}")]
@@ -88,5 +80,23 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             else return BadRequest();
         }
 
+
+        [HttpGet, Route("DownloadFile/{id}")]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            if (id > 0)
+            {
+                Income income = await _incomeRepository.GetByIdAsync(id);
+                if (income != null && income.File != null)
+                {
+                    return File(income.File, "application/octet-stream", $"Income Report.{income.FileExtension}");
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
+        }
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using HomeBudgetManagement.Api.Core.Services;
 using HomeBudgetManagement.Models;
+using System.Net.Http;
+using System.IO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -48,7 +50,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPost("PostExpense")]
         public async Task<IActionResult> AddExpense([FromBody] Expense expense)
         {
-            Account account = await _accountRepository.GetFirstAccountAsync();
+            Account account = await _accountRepository.GetAccountAsync();
             if(account.Balance >= expense.Amount)
             {
                 expense = await _expenseRepository.AddAsync(expense);
@@ -64,7 +66,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPut("UpdateExpense")]
         public async Task<IActionResult> UpdateExpense([FromBody] Expense expense)
         {
-            Account account = await _accountRepository.GetFirstAccountAsync();
+            Account account = await _accountRepository.GetAccountAsync();
             if (account.Balance >= expense.Amount)
             {
                 int result = await _expenseRepository.SaveAsync(expense);
@@ -87,6 +89,26 @@ namespace HomeBudgetManagement.Api.Core.Controllers
                 return Ok();
             }
             else return BadRequest();
+        }
+
+
+        [HttpGet, Route("DownloadFile/{id}")]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            if (id > 0)
+            {
+                Expense expense = await _expenseRepository.GetByIdAsync(id);
+                if (expense != null && expense.File != null)
+                {
+                    var dataStream = new MemoryStream(expense.File);
+                    return File(expense.File, "application/octet-stream",$"Expense Report.{expense.FileExtension}");
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            return BadRequest();
         }
     }
 }
