@@ -8,7 +8,7 @@ namespace HomeBudgetManagement.Models
 {
     public class Account
     {
-        public int Id { get; set; }
+        public int AccountId { get; set; }
         public double Balance { get; set; }
     }
 }
