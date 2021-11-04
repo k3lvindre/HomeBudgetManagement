@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HomeBudgetManagement.Models
 {
-    //[Table("Item")] //commented out so all edm should only be configure inside dbcontext so it is easy to maintain and for separation of concern
-    public class Item
+    //[Table("Expense")] //commented out so all edm should only be configure inside dbcontext so it is easy to maintain and for separation of concern
+    public partial class Expense
     {
         public int Id { get; set; }
         public string Description { get; set; }
@@ -15,6 +15,5 @@ namespace HomeBudgetManagement.Models
         public DateTime Date { get; set; }
         public byte[] File { get; set; }
         public string FileExtension { get; set; }
-        public int ItemTypeId { get; set; }
     }
 }

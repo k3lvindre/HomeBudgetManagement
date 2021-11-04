@@ -54,7 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
-    <Compile Include="Item.cs" />
+    <Compile Include="Expense.cs" />
+    <Compile Include="Income.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
