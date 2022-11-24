@@ -15,5 +15,6 @@ namespace HomeBudgetManagement.Models
         public DateTime Date { get; set; }
         public byte[] File { get; set; }
         public string FileExtension { get; set; }
+        public int AccountId { get; set; }
     }
 }
