@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.API.Controllers
 {
-    [RoutePrefix("api/Income")]
+    [RoutePrefix("api/Incomes")]
     public class IncomeController : ApiController
     {
         private IIncomeRepository _incomeRepository { get; }
@@ -17,7 +17,7 @@ namespace HomeBudgetManagement.API.Controllers
         }
 
         // GET: Incomes
-        [HttpGet, Route("List")]
+        [HttpGet]
         public async Task<IHttpActionResult> Incomes()
         {
             try
@@ -38,7 +38,7 @@ namespace HomeBudgetManagement.API.Controllers
             }
         }
 
-        [HttpGet, Route("{id}")]
+        [HttpGet]
         public async Task<IHttpActionResult> GetById(int id)
         {
             if (id > 0)
@@ -56,8 +56,8 @@ namespace HomeBudgetManagement.API.Controllers
             else return BadRequest();
         }
 
-        [HttpPost, Route("PostIncome")]
-        public async Task<IHttpActionResult> AddIncome(Income Income)
+        [HttpPost]
+        public async Task<IHttpActionResult> AddIncome([FromBody] Income Income)
         {
             try
             {
@@ -82,8 +82,8 @@ namespace HomeBudgetManagement.API.Controllers
         }
 
 
-        [HttpPut, Route("UpdateIncome")]
-        public async Task<IHttpActionResult> UpdateIncome(Income Income)
+        [HttpPut]
+        public async Task<IHttpActionResult> UpdateIncome([FromBody] Income Income)
         {
             try
             {
@@ -103,8 +103,8 @@ namespace HomeBudgetManagement.API.Controllers
             }
         }
 
-        [HttpPost, Route("DeleteRange")]
-        public async Task<IHttpActionResult> DeleteIncome(List<Income> Income)
+        [HttpDelete]
+        public async Task<IHttpActionResult> DeleteIncome([FromBody] List<Income> Income)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace HomeBudgetManagement.API.Controllers
             }
         }
 
-        [HttpDelete, Route("Delete/{id}")]
+        [HttpDelete]
         public async Task<IHttpActionResult> DeleteIncome(int id)
         {
             try

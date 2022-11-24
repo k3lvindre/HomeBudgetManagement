@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace HomeBudgetManagement.API.Controllers
 {
-    [RoutePrefix("api/Expense")]
+    [RoutePrefix("api/Expenses")]
     public class ExpenseController : ApiController
     {
         private IExpenseRepository _expenseRepository { get; }
@@ -21,7 +21,7 @@ namespace HomeBudgetManagement.API.Controllers
         }
 
         // GET: Expenses
-        [HttpGet, Route("List")]
+        [HttpGet]
         public async Task<IHttpActionResult> Expenses()
         {
             try
@@ -42,8 +42,8 @@ namespace HomeBudgetManagement.API.Controllers
             }
         }
 
-        [HttpGet, Route("{id?}",Name ="GetExpenseById")]
-        public async Task<IHttpActionResult> GetById(int? id)
+        [HttpGet]
+        public async Task<IHttpActionResult> GetById(int id)
         {
             if (id > 0)
             {
@@ -60,7 +60,7 @@ namespace HomeBudgetManagement.API.Controllers
             else return BadRequest();
         }
 
-        [HttpPost, Route("PostExpense")]
+        [HttpPost]
         public async Task<IHttpActionResult> AddExpense([FromBody] Expense expense)
         {
             try
@@ -84,8 +84,8 @@ namespace HomeBudgetManagement.API.Controllers
         }
 
 
-        [HttpPut, Route("UpdateExpense")]
-        public async Task<IHttpActionResult> UpdateExpense(Expense expense)
+        [HttpPut]
+        public async Task<IHttpActionResult> UpdateExpense([FromBody] Expense expense)
         {
             try
             {
@@ -105,8 +105,8 @@ namespace HomeBudgetManagement.API.Controllers
             }
         }
 
-        [HttpPost, Route("DeleteRange")]
-        public async Task<IHttpActionResult> DeleteExpense(List<Expense> expense)
+        [HttpDelete]
+        public async Task<IHttpActionResult> DeleteExpense([FromBody] List<Expense> expense)
         {
             try
             {
@@ -126,7 +126,7 @@ namespace HomeBudgetManagement.API.Controllers
             }
         }
 
-        [HttpDelete, Route("Delete/{id}")]
+        [HttpDelete]
         public async Task<IHttpActionResult> DeleteExpense(int id)
         {
             try

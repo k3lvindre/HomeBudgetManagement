@@ -5,7 +5,7 @@ using HomeBudgetManagement.Models;
 
 namespace HomeBudgetManagement.API.Controllers
 {
-    [RoutePrefix("api/Account")]
+    [RoutePrefix("api/Accounts")]
     [AcceptHeaderFilter]
     [BasicAuthentication]
     public class AccountController : ApiController
@@ -17,7 +17,7 @@ namespace HomeBudgetManagement.API.Controllers
         }
 
         // GET: api/Account/5
-        [HttpGet, Route("Get")]
+        [HttpGet]
         public async Task<IHttpActionResult> GetAccount()
         {
             using(_accountRepository)

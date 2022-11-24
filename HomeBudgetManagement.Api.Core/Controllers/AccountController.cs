@@ -9,7 +9,10 @@ using HomeBudgetManagement.Models;
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
-    [Route("Account")]
+    [Route("api/Accounts")]
+    //With ApiController attribute.This attribute allows the data from the request to be mapped to the employee parameter on UpdateEmployee() method.
+    //Either this ApiController attribute is required or the method parameter must be decorated with[FromBody] attribute.
+    //Otherwise, model binding will not work as expected and the account data from the request will not be mapped to the account parameter below
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -20,23 +23,21 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             _accountRepository = accountRepository;
         }
 
-        [Route("GetAccount")]
-        [HttpGet]
-        public async Task<IActionResult> GetAccount()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAccount(int id)
         {
-            Account account = await _accountRepository.GetAccountAsync();
+            Account account = await _accountRepository.GetAccountByIdAsync(id);
             if(account != null)
             {
                 return Ok(account);
             } else return NotFound();
         }
         
-        [Route("UpdateAccount")]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody]Account account)
+        public async Task<IActionResult> Update(Account account)
         {
-            int result = await _accountRepository.UpdateAccountAsync(account);
-            if(result > 0)
+            var result = await _accountRepository.UpdateAccountAsync(account);
+            if(result)
             {
                 return Ok();
             } else return NotFound();

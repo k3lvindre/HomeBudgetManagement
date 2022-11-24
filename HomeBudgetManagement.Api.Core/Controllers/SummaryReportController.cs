@@ -8,7 +8,7 @@ using HomeBudgetManagement.Models;
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
-    [Route("SummaryReport")]
+    [Route("api/SummaryReports")]
     [ApiController]
     public class SummaryReportController : Controller
     {
@@ -19,13 +19,13 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             _incomeSummary = incomeSummary;
         }
 
-        [HttpGet("GetIncomeByMonthOfCurrentYear/{month}")]
+        [HttpGet("{month:int}")]
         public async Task<IActionResult> Index(int month)
         {
             return Ok(await _incomeSummary.GetItemsByMonthAsync(month));
         }
 
-        [HttpPost("GetIncomeByDateRange")]
+        [HttpGet("month/{from}/{to}")]
         public async Task<IActionResult> Index(DateTime from, DateTime to)
         {
             return Ok(await _incomeSummary.GetItemsByDateRangeAsync(from, to));

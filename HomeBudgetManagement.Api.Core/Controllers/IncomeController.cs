@@ -8,7 +8,7 @@ using System.IO;
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
-    [Route("income")]
+    [Route("api/incomes")]
     [ApiController]
     public class IncomeController : ControllerBase
     {
@@ -22,7 +22,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpGet("List")]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             List<Income> incomes = await _incomeRepository.GetAllAsync();
@@ -33,7 +33,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             else return NotFound();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetBydId(int id)
         {
             Income income = await _incomeRepository.GetByIdAsync(id);
@@ -44,10 +44,10 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             else return Ok(income);
         }
 
-        [HttpPost("PostIncome")]
-        public async Task<IActionResult> AddIncome([FromBody] Income income)
+        [HttpPost]
+        public async Task<IActionResult> AddIncome(Income income)
         {
-            Account account = await _accountRepository.GetAccountAsync();
+            //Account account = await _accountRepository.GetAccountAsync();
             income = await _incomeRepository.AddAsync(income);
             if (income.Id > 0)
             {
@@ -56,24 +56,24 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             else return BadRequest();
         }
 
-        [HttpPut("UpdateIncome")]
-        public async Task<IActionResult> UpdateIncome([FromBody] Income income)
+        [HttpPut]
+        public async Task<IActionResult> UpdateIncome(Income income)
         {
-            Account account = await _accountRepository.GetAccountAsync();
-            int result = await _incomeRepository.SaveAsync(income);
-            if (result > 0)
+            //Account account = await _accountRepository.GetAccountAsync();
+            var result = await _incomeRepository.SaveAsync(income);
+            if (result)
             {
                 return Accepted();
             }
             else return BadRequest();
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            int result = await _incomeRepository.RemoveAsync(id);
+            var result = await _incomeRepository.RemoveAsync(id);
 
-            if (result > 0)
+            if (result)
             {
                 return Ok();
             }
