@@ -36,8 +36,9 @@ namespace HomeBudgetManagement.Api.Core.Services
                 {
                     await _dbContext.Incomes.AddAsync(income);
 
-                    Account account = await _accountRepository.GetAccountAsync();
-                    account.Balance += income.Amount;
+                    //Move to pub/sub
+                    //Account account = await _accountRepository.GetAccountAsync();
+                    //account.Balance += income.Amount;
 
                     await _dbContext.SaveChangesAsync();
                     await dbContextTransaction.CommitAsync();
@@ -51,29 +52,29 @@ namespace HomeBudgetManagement.Api.Core.Services
             return income;
         }
 
-        public async Task<int> AddRangeAsync(List<Income> incomes)
+        public async Task<bool> AddRangeAsync(List<Income> incomes)
         {
-            int result = 0;
-
             using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
                 {
                     await _dbContext.Incomes.AddRangeAsync(incomes);
 
-                    Account account = await _accountRepository.GetAccountAsync();
-                    account.Balance += incomes.Sum(x => x.Amount);
+                    //Move to pub/sub
+                    //Account account = await _accountRepository.GetAccountAsync();
+                    //account.Balance += incomes.Sum(x => x.Amount);
 
-                    result = await _dbContext.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
                     await dbContextTransaction.CommitAsync();
                 }
                 catch (Exception)
                 {
                     await dbContextTransaction.RollbackAsync();
+                    return false;
                 }
             }
 
-            return result;
+            return true;
         }
 
         public async Task<Income> GetByIdAsync(int Id)
@@ -81,10 +82,8 @@ namespace HomeBudgetManagement.Api.Core.Services
             return await _dbContext.Incomes.FindAsync(Id);
         }
 
-        public async Task<int> SaveAsync(Income income)
+        public async Task<bool> SaveAsync(Income income)
         {
-            int result = 0;
-
             using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
@@ -92,30 +91,31 @@ namespace HomeBudgetManagement.Api.Core.Services
                     Income incomeFromDb = await _dbContext.Incomes.FindAsync(income.Id);
                     EntityEntry<Income> entry = _dbContext.Entry<Income>(incomeFromDb);
 
-                    Account account = await _accountRepository.GetAccountAsync();
-                    //Add the original balance for correct balance calculation
-                    account.Balance -= Convert.ToDouble(entry.OriginalValues["Amount"]);
-                    account.Balance += income.Amount;
+                    //Move to pub/sub
+                    //Account account = await _accountRepository.GetAccountAsync();
+                    ////Add the original balance for correct balance calculation
+                    //account.Balance -= Convert.ToDouble(entry.OriginalValues["Amount"]);
+                    //account.Balance += income.Amount;
 
                     entry.Property(x => x.Amount).CurrentValue = income.Amount;
                     entry.State = EntityState.Modified;
 
-                    result = await _dbContext.SaveChangesAsync();
+                    await _dbContext.SaveChangesAsync();
                     await dbContextTransaction.CommitAsync();
                 }
                 catch (Exception)
                 {
 
                     await dbContextTransaction.RollbackAsync();
+                    return false;
                 }
             }
 
-            return result;
+            return true;
         }
 
-        public async Task<int> RemoveAsync(int id)
+        public async Task<bool> RemoveAsync(int id)
         {
-            int result = 0;
             using (IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync())
             {
                 try
@@ -125,20 +125,22 @@ namespace HomeBudgetManagement.Api.Core.Services
                     {
                         _dbContext.Incomes.Remove(income);
 
-                        Account account = await _accountRepository.GetAccountAsync();
-                        account.Balance -= income.Amount;
+                        //Move to pub/sub
+                        //Account account = await _accountRepository.GetAccountAsync();
+                        //account.Balance -= income.Amount;
 
-                        result = await _dbContext.SaveChangesAsync();
+                        await _dbContext.SaveChangesAsync();
                         await dbContextTransaction.CommitAsync();
                     }
                 }
                 catch (Exception)
                 {
                     await dbContextTransaction.RollbackAsync();
+                    return false;
                 }
             }
 
-            return result;
+            return true;
         }
     }
 }

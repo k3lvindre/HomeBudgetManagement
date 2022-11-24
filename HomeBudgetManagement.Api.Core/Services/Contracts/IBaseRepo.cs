@@ -10,9 +10,9 @@ namespace HomeBudgetManagement.Api.Core.Services
     {
         Task<List<T>> GetAllAsync();
         Task<T> GetByIdAsync(int Id);
-        Task<int> SaveAsync(T entity);
+        Task<bool> SaveAsync(T entity);
         Task<T> AddAsync(T entity);
-        Task<int> AddRangeAsync(List<T> entity);
-        Task<int> RemoveAsync(int Id);
+        Task<bool> AddRangeAsync(List<T> entity);
+        Task<bool> RemoveAsync(int Id);
     }
 }

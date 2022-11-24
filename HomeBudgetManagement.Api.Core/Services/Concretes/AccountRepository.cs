@@ -17,21 +17,16 @@ namespace HomeBudgetManagement.Api.Core.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Account> GetAccountAsync()
+        public async Task<Account> GetAccountByIdAsync(int id)
         {
-            if(!_dbContext.Account.Any())
-            {
-                await _dbContext.Account.AddAsync(new Account() { Id = 0, Balance = 0 });
-                await _dbContext.SaveChangesAsync();
-            }
-
-            return await _dbContext.Account.FirstOrDefaultAsync();
+            var account = await _dbContext.Account.FindAsync(id);
+            return account;
         }
 
-        public async Task<int> UpdateAccountAsync(Account account)
+        public async Task<bool> UpdateAccountAsync(Account account)
         {
             _dbContext.Entry<Account>(account).State = EntityState.Modified;
-            return await _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync() > 0;
         }
     }
 }

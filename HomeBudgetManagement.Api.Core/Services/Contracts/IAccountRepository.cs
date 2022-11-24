@@ -8,7 +8,7 @@ namespace HomeBudgetManagement.Api.Core.Services
 {
     public interface IAccountRepository 
     {
-        Task<int> UpdateAccountAsync(Account account);
-        Task<Account> GetAccountAsync();
+        Task<bool> UpdateAccountAsync(Account account);
+        Task<Account> GetAccountByIdAsync(int id);
     }
 }
