@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using HomeBudgetManagement.Api.Core.Data;
 using HomeBudgetManagement.Api.Core.Services;
+using Microsoft.OpenApi.Models;
+using System;
 
 namespace HomeBudgetManagement.Api.Core
 {
@@ -38,14 +40,35 @@ namespace HomeBudgetManagement.Api.Core
             //});
 
             services.AddDbContext<HomeBudgetManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HbmConnectionString")), ServiceLifetime.Scoped);
-            
+
             //Singleton - which creates a single instance throughout the application.It creates the instance for the first time and reuses the same object in the all calls.
             //Scoped lifetime services - are created once per request within the scope.It is equivalent to a singleton in the current scope.For example, in MVC it creates one instance for each HTTP request, but it uses the same instance in the other calls within the same web request.
             //Transient lifetime services - are created each time they are requested.This lifetime works best for lightweight, stateless services.
-            services.AddScoped<IExpenseRepository, ExpenseRepository>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IIncomeRepository, IncomeRepository>(); 
-            services.AddScoped<IIncomeSummary, IncomeSummary>(); 
+            services.AddApplicationModule();
+
+            //run this on package manager
+            //Install-Package Swashbuckle.AspNetCore -Version 6.2.3
+            //Enable the middleware for serving the generated JSON document and the Swagger UI
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "HomeBudgetManagement API",
+                    Description = "An ASP.NET Core Web API for managing ToDo items",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Example Contact",
+                        Url = new Uri("https://example.com/contact")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Example License",
+                        Url = new Uri("https://example.com/license")
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,6 +81,9 @@ namespace HomeBudgetManagement.Api.Core
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                //adds the Swagger middleware
+                app.UseSwagger();
+                app.UseSwaggerUI();//enables the Static File Middleware(Static files, such as HTML, CSS, images, and JavaScript).
             }
 
             if (env.IsProduction() || env.IsStaging() || env.IsEnvironment("Staging_2"))
