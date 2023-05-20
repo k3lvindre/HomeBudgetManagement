@@ -12,23 +12,23 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     [ApiController]
     public class SummaryReportController : Controller
     {
-        private readonly IIncomeSummary _incomeSummary;
+        private readonly ISummary<Expense> _summary;
 
-        public SummaryReportController(IIncomeSummary incomeSummary)
+        public SummaryReportController(ISummary<Expense> incomeSummary)
         {
-            _incomeSummary = incomeSummary;
+            _summary = incomeSummary;
         }
 
         [HttpGet("{month:int}")]
         public async Task<IActionResult> Index(int month)
         {
-            return Ok(await _incomeSummary.GetItemsByMonthAsync(month));
+            return Ok(await _summary.GetItemsByMonthAsync(month));
         }
 
         [HttpGet("month/{from}/{to}")]
         public async Task<IActionResult> Index(DateTime from, DateTime to)
         {
-            return Ok(await _incomeSummary.GetItemsByDateRangeAsync(from, to));
+            return Ok(await _summary.GetItemsByDateRangeAsync(from, to));
         }
     }
 }

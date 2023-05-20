@@ -20,13 +20,11 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     public class ExpenseController : ControllerBase
     {
         private readonly IExpenseRepository _expenseRepository;
-        private readonly IAccountRepository _accountRepository;
 
         public ExpenseController(IExpenseRepository expenseRepository,
                                  IAccountRepository accountRepository)
         {
             _expenseRepository = expenseRepository;
-            _accountRepository = accountRepository;
         }
 
         [HttpGet]
@@ -101,7 +99,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
                 var result = await _expenseRepository.SaveAsync(expense);
                 if (result)
                 {
-                    return Accepted();
+                    return Ok();
                 }
                 else return BadRequest();
             //} 
@@ -126,7 +124,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         }
 
 
-        [HttpGet, Route("DownloadFile/{id}")]
+        [HttpGet, Route("{id}/file")]
         public async Task<IActionResult> DownloadFile(int id)
         {
             if (id > 0)

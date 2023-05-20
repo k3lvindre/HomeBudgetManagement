@@ -22,27 +22,5 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         {
             _accountRepository = accountRepository;
         }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccount(int id)
-        {
-            Account account = await _accountRepository.GetAccountByIdAsync(id);
-            if(account != null)
-            {
-                return Ok(account);
-            } else return NotFound();
-        }
-        
-        [HttpPut]
-        public async Task<IActionResult> Update(Account account)
-        {
-            var result = await _accountRepository.UpdateAccountAsync(account);
-            if(result)
-            {
-                return Ok();
-            } else return NotFound();
-        }
-
-
     }
 }
