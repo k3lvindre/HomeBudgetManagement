@@ -49,6 +49,15 @@ namespace HomeBudgetManagement.Api.Core
             //run this on package manager
             //Install-Package Swashbuckle.AspNetCore -Version 6.2.3
             //Enable the middleware for serving the generated JSON document and the Swagger UI
+            //Access Swagger document and API documentation
+            //To see the generated Swagger document i.e the OpenAPI specification document, navigate to http://localhost:<port>/swagger/v1/swagger.json
+            //To see the swagger documentation UI navigate to http://localhost:<port>/swagger
+            //To serve the Swagger UI at the application root URL (http://localhost:<port>/), set the RoutePrefix property to an empty string:
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Employee API V1");
+            //    c.RoutePrefix = string.Empty;
+            //});
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
