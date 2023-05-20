@@ -1,4 +1,5 @@
 ﻿using HomeBudgetManagement.Api.Core.Services;
+using HomeBudgetManagement.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,7 @@ namespace HomeBudgetManagement.Api.Core
         {
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<IIncomeRepository, IncomeRepository>();
-            services.AddScoped<IIncomeSummary, IncomeSummary>();
+            services.AddScoped<ISummary<Expense>, Summary>();
             return services;
         }
     }
