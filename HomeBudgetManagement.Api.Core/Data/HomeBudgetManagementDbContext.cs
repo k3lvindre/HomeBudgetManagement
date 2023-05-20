@@ -25,7 +25,6 @@ namespace HomeBudgetManagement.Api.Core.Data
 
         public virtual DbSet<Expense> Expenses { get; set; }
         public virtual DbSet<Account> Account { get; set; }
-        public virtual DbSet<Income> Incomes { get; set; }
 
     }
 }
