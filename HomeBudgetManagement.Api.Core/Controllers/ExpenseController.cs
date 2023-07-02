@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HomeBudgetManagement.Api.Core.Services;
-using HomeBudgetManagement.Models;
-using System.Net.Http;
-using System.IO;
+﻿using HomeBudgetManagement.Application;
+using HomeBudgetManagement.Application.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,35 +16,36 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     [Produces("application/json")]
     public class ExpenseController : ControllerBase
     {
-        private readonly IExpenseRepository _expenseRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public ExpenseController(IExpenseRepository expenseRepository,
-                                 IAccountRepository accountRepository)
+        public ExpenseController(IUnitOfWork unitOfWork, IMediator mediator)
         {
-            _expenseRepository = expenseRepository;
+            _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            List<Expense> expenses = await _expenseRepository.GetAllAsync();
-            if (expenses.Any())
-            {
-                return Ok(expenses);
-            }
-            else return NotFound();
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> Get()
+        //{
+        //    List<Expense> expenses =  await _unitOfWork.Expenses.GetAllAsync();
+        //    if (expenses.Any())
+        //    {
+        //        return Ok(expenses);
+        //    }
+        //    else return NotFound();
+        //}
 
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetBydId(int id)
-        {
-            Expense expense =  await _expenseRepository.GetByIdAsync(id);
-            if(expense == null)
-            {
-               return  NotFound();
-            }
-            else  return Ok(expense);
-        }
+        //[HttpGet("{id:int}")]
+        //public async Task<IActionResult> GetBydId(int id)
+        //{
+        //    Expense expense =   await _unitOfWork.Expenses.GetByIdAsync(id);
+        //    if(expense == null)
+        //    {
+        //       return  NotFound();
+        //    }
+        //    else  return Ok(expense);
+        //}
 
         //Adding triple-slash comments to an action enhances the Swagger UI by adding the description to the section header.
         //Add a<remarks> element to the Create action method documentation.
@@ -75,72 +73,91 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddExpense(Expense expense)
+        public async Task<IActionResult> AddExpense(CreateExpenseRequestDto expense)
         {
-            //Account account = await _accountRepository.GetAccountAsync();
+            //Account account =  _accountRepository.GetAccountAsync();
             //if(account.Balance >= expense.Amount)
             //{
-                expense = await _expenseRepository.AddAsync(expense);
-                if (expense.Id > 0)
-                {
-                    return CreatedAtAction(nameof(Get), new { id = expense.Id }, expense);
-                }
-                else return BadRequest();
+            //await _unitOfWork.Expenses.AddAsync(expense);
+            //int result =  await _unitOfWork.SaveChangesAsync();
+            var command = new CreateExpenseCommand()
+            {
+                Description = expense.Description,
+                Amount = expense.Amount,
+                Type  = expense.Type,
+                AccountId = expense.AccountId,
+                File = expense.File,
+                FileExtension = expense.FileExtension,
+            };
+
+            var result = await _mediator.Send(command);
+            if (result.IsCreated)
+            {
+                //return CreatedAtAction(nameof(Get), new { id = expense.Id }, expense);
+                return CreatedAtAction(nameof(AddExpense), 12);
+            }
+            else return BadRequest();
             //}
             //else return BadRequest("Insuficient Balance!");
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateExpense(Expense expense)
-        {
-            //Account account = await _accountRepository.GetAccountAsync();
-            //if (account.Balance >= expense.Amount)
-            //{
-                var result = await _expenseRepository.SaveAsync(expense);
-                if (result)
-                {
-                    return Ok();
-                }
-                else return BadRequest();
-            //} 
-            //else return BadRequest("Insuficient Balance!");
-        }
+        //[HttpPut]
+        //public async Task<IActionResult> UpdateExpense(CreatePayoutRequestDto expense)
+        //{
+        //    //Account account =  _accountRepository.GetAccountAsync();
+        //    //if (account.Balance >= expense.Amount)
+        //    //{
+        //    //_unitOfWork.Expenses.Update(expense);
+        //    //var result = await _unitOfWork.SaveChangesAsync();
+        //    var command = new CreateExpenseCommand(expense.De)
+
+        //    var result = _mediator.Send();
+        //        if (result > 0)
+        //        {
+        //            return Ok();
+        //        }
+        //        else return BadRequest();
+        //    //} 
+        //    //else return BadRequest("Insuficient Balance!");
+        //}
 
         /// <summary>
         /// Deletes a specific Expense.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await _expenseRepository.RemoveAsync(id);
+        //[HttpDelete("{id:int}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    var item = await _unitOfWork.Expenses.GetByIdAsync(id);
+        //    _unitOfWork.Expenses.Delete(item);
+        //    var result =  await _unitOfWork.SaveChangesAsync();
 
-            if (result)
-            {
-                return Ok();
-            }
-            else return BadRequest();
-        }
+        //    if (result > 0)
+        //    {
+        //        return Ok();
+        //    }
+        //    else return BadRequest();
+        //}
 
 
-        [HttpGet, Route("{id}/file")]
-        public async Task<IActionResult> DownloadFile(int id)
-        {
-            if (id > 0)
-            {
-                Expense expense = await _expenseRepository.GetByIdAsync(id);
-                if (expense != null && expense.File != null)
-                {
-                    var dataStream = new MemoryStream(expense.File);
-                    return File(expense.File, "application/octet-stream",$"Expense Report.{expense.FileExtension}");
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            return BadRequest();
-        }
+        //[HttpGet, Route("{id}/file")]
+        //public async Task<IActionResult> DownloadFile(int id)
+        //{
+        //    if (id > 0)
+        //    {
+        //        Expense expense =  await _unitOfWork.Expenses.GetByIdAsync(id);
+        //        if (expense != null && expense.File != null)
+        //        {
+        //            var dataStream = new MemoryStream(expense.File);
+        //            return File(expense.File, "application/octet-stream",$"Expense Report.{expense.FileExtension}");
+        //        }
+        //        else
+        //        {
+        //            return BadRequest();
+        //        }
+        //    }
+        //    return BadRequest();
+        //}
     }
 }

@@ -1,7 +1,8 @@
-﻿using HomeBudgetManagement.Models;
+﻿using HomeBudgetManagement.Core.Domain.AccountAggregate;
+using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeBudgetManagement.Api.Core.Data
+namespace HomeBudgetManagement.Infrastructure.EntityFramework
 {
     public class HomeBudgetManagementDbContext : DbContext
     {

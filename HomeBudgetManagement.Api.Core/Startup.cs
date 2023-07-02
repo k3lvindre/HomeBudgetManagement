@@ -1,13 +1,12 @@
+using Autofac;
+using Autofac.Configuration;
+using Autofac.Extensions.DependencyInjection;
+using HomeBudgetManagement.API.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using HomeBudgetManagement.Api.Core.Data;
-using HomeBudgetManagement.Api.Core.Services;
 using Microsoft.OpenApi.Models;
 using System;
 
@@ -16,6 +15,10 @@ namespace HomeBudgetManagement.Api.Core
     public class Startup
     {
         public IConfiguration Configuration { get; }
+
+        // If, for some reason, you need a reference to the built container, you
+        // can use the convenience extension method GetAutofacRoot.
+        public ILifetimeScope AutofacContainer { get; private set; }
 
         public Startup(IConfiguration configuration)
         {
@@ -39,12 +42,11 @@ namespace HomeBudgetManagement.Api.Core
             //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HomeBudgetManagement.API.Core", Version = "v1" });
             //});
 
-            services.AddDbContext<HomeBudgetManagementDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("HbmConnectionString")), ServiceLifetime.Scoped);
 
             //Singleton - which creates a single instance throughout the application.It creates the instance for the first time and reuses the same object in the all calls.
             //Scoped lifetime services - are created once per request within the scope.It is equivalent to a singleton in the current scope.For example, in MVC it creates one instance for each HTTP request, but it uses the same instance in the other calls within the same web request.
             //Transient lifetime services - are created each time they are requested.This lifetime works best for lightweight, stateless services.
-            services.AddApplicationModule();
+            services.AddCustomDbContext(Configuration);
 
             //run this on package manager
             //Install-Package Swashbuckle.AspNetCore -Version 6.2.3
@@ -78,6 +80,17 @@ namespace HomeBudgetManagement.Api.Core
                     }
                 });
             });
+            services.AddHealthChecks();
+
+            //This example shows ASP.NET Core 1.1 - 2.2 usage,
+            //where you return an IServiceProvider from the ConfigureServices(IServiceCollection services) delegate.
+            //This is not for ASP.NET Core 3+ or the .NET Core 3+ generic hosting support -
+            //ASP.NET Core 3 has deprecated the ability to return a service provider from ConfigureServices.
+            //var container = new ContainerBuilder();
+            //container.Populate(services);
+            //container.RegisterModule(new MediatorModule());
+            //container.RegisterModule(new ConfigurationModule(Configuration));
+            //return new AutofacServiceProvider(container.Build());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +113,12 @@ namespace HomeBudgetManagement.Api.Core
                 app.UseExceptionHandler("/Error");
             }
 
+            // If, for some reason, you need a reference to the built container, you
+            // can use the convenience extension method GetAutofacRoot.
+            AutofacContainer = app.ApplicationServices.GetAutofacRoot();
+
+
+            app.UseHealthChecks("/health");
             app.UseRouting();
 
             app.UseAuthorization();
@@ -108,6 +127,20 @@ namespace HomeBudgetManagement.Api.Core
             {
                 endpoints.MapControllers();
             });
+            
+        }
+
+        //kELVIN: METHOD USE BY AUTOFAC TO REGISTER SERVICES.
+        // ConfigureContainer is where you can register things directly
+        // with Autofac. This runs after ConfigureServices so the things
+        // here will override registrations made in ConfigureServices.
+        // Don't build the container; that gets done for you by the factory.
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            // Register your own things directly with Autofac here. Don't
+            // call builder.Populate(), that happens in AutofacServiceProviderFactory
+            // for you.
+            builder.RegisterModule(new MediatorModule());
         }
     }
 }
