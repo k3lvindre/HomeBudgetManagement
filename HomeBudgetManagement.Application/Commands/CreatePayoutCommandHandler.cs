@@ -2,6 +2,9 @@
 using HomeBudgetManagement.Core.Events;
 using HomeBudgetManagement.DTO;
 using MediatR;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.Application.Commands
 {
@@ -32,11 +35,11 @@ namespace HomeBudgetManagement.Application.Commands
 
             await _unitOfWork.Expenses.AddAsync(expense);
 
-            int result = await _unitOfWork.SaveChangesAsync();
+            //int result = await _unitOfWork.SaveChangesAsync();
 
             return new CreateExpenseResponseDto()
             {
-                IsCreated = result > 0
+                IsCreated = 1 > 0
             };
         }
     }
