@@ -2,6 +2,7 @@
 using FluentValidation;
 using HomeBudgetManagement.Application.Behaviors;
 using HomeBudgetManagement.Application.Commands;
+using HomeBudgetManagement.Application.DomainEventHandlers;
 using MediatR;
 using System.Reflection;
 
@@ -23,8 +24,8 @@ namespace HomeBudgetManagement.API.Core.Infrastructure
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
 
             // Register the DomainEventHandler classes (they implement INotificationHandler<>) in assembly holding the Domain Events
-            //builder.RegisterAssemblyTypes(typeof(PayoutSubmittedDomainEventHandler).GetTypeInfo().Assembly)
-            //    .AsClosedTypesOf(typeof(INotificationHandler<>));
+            builder.RegisterAssemblyTypes(typeof(ExpenseModifiedEventHandler).GetTypeInfo().Assembly)
+                .AsClosedTypesOf(typeof(INotificationHandler<>));
 
             //// Register the Command's Validators (Validators based on FluentValidation library)
             builder
@@ -59,10 +60,8 @@ namespace HomeBudgetManagement.API.Core.Infrastructure
             //builder.RegisterGeneric(typeof(UniqueUtrBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
             //builder.RegisterType<RegisterBeneficiaryBehaviour>().As<IPipelineBehavior<RegisterBeneficiaryCommand, BeneficiaryResponseDTO>>();
 
-            //if (!UseDDBRepository)
-            //{
-            //    builder.RegisterGeneric(typeof(TransactionBehaviour<,>)).As(typeof(IPipelineBehavior<,>));
-            //}
+            builder.RegisterGeneric(typeof(TransactionBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+
         }
     }
 }

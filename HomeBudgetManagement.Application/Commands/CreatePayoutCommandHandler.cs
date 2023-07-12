@@ -1,5 +1,5 @@
-﻿using HomeBudgetManagement.Core.Domain;
-using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+﻿using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+using HomeBudgetManagement.Core.Events;
 using HomeBudgetManagement.DTO;
 using MediatR;
 
@@ -16,9 +16,9 @@ namespace HomeBudgetManagement.Application.Commands
 
         public async Task<CreateExpenseResponseDto> Handle(CreateExpenseCommand command, CancellationToken cancellationToken)
         {
-            await _unitOfWork.Expenses.AddAsync(new Expense()
+            var expense = new Expense()
             {
-                Id = 13,
+                Id = new Random().Next(0, 100),
                 AccountId = command.AccountId ?? 0,
                 Amount = command.Amount,
                 Description = command.Description,
@@ -26,7 +26,11 @@ namespace HomeBudgetManagement.Application.Commands
                 FileExtension = command.FileExtension,
                 Type = command.Type,
                 CreatedDate = DateTime.Now
-            });
+            };
+
+            expense.AddDomainEvent(new ExpenseModifiedEvent(expense));
+
+            await _unitOfWork.Expenses.AddAsync(expense);
 
             int result = await _unitOfWork.SaveChangesAsync();
 
