@@ -32,6 +32,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeBudgetManagement.Core",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{349E7012-4C55-47B7-ACE7-9D7422A34420}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microservices", "Microservices", "{23F0A627-147B-4514-A68B-CF279DE68E75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportMicroservice", "ReportMicroservice\ReportMicroservice.csproj", "{3442B14B-2860-4823-978E-1A0DE29CE79D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +90,10 @@ Global
 		{1ACDB398-DBF0-44A7-B7C0-C398555B788C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1ACDB398-DBF0-44A7-B7C0-C398555B788C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1ACDB398-DBF0-44A7-B7C0-C398555B788C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3442B14B-2860-4823-978E-1A0DE29CE79D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3442B14B-2860-4823-978E-1A0DE29CE79D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3442B14B-2860-4823-978E-1A0DE29CE79D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3442B14B-2860-4823-978E-1A0DE29CE79D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +101,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BF442C86-9DA9-4516-8E06-12094020F168} = {349E7012-4C55-47B7-ACE7-9D7422A34420}
 		{1ACDB398-DBF0-44A7-B7C0-C398555B788C} = {349E7012-4C55-47B7-ACE7-9D7422A34420}
+		{3442B14B-2860-4823-978E-1A0DE29CE79D} = {23F0A627-147B-4514-A68B-CF279DE68E75}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37EA834B-A51F-4C78-8000-840EF55B3F19}

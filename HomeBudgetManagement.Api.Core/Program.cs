@@ -19,7 +19,7 @@ namespace HomeBudgetManagement.Api.Core
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory()) //using autofac as service provider replacing the default service provider
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.Sources.Clear();
