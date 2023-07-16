@@ -13,7 +13,7 @@ namespace ReportMicroservice.EventFeed
         {
             _client = httpClient;
             _logger = logger;
-            _client.BaseAddress = new Uri("http://localhost:4555/api/eventfeeds");
+            _client.BaseAddress = new Uri("http://localhost:5000/api/eventfeeds");
         }
         public async Task ReadEventsAsync()
         {
@@ -32,7 +32,6 @@ namespace ReportMicroservice.EventFeed
 
                 throw;
             }
-
         }
     }
 }

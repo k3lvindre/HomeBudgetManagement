@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
@@ -24,7 +26,6 @@
     <ProjectReference Include="..\HomeBudgetManagement.Application\HomeBudgetManagement.Application.csproj" />
     <ProjectReference Include="..\HomeBudgetManagement.Core\HomeBudgetManagement.Core.csproj" />
     <ProjectReference Include="..\HomeBudgetManagement.Infrastructure\HomeBudgetManagement.Infrastructure.csproj" />
-    <ProjectReference Include="..\HomeBudgetManagement.Models\HomeBudgetManagement.Models.csproj" />
   </ItemGroup>
 
 </Project>
