@@ -29,8 +29,7 @@ namespace ReportMicroservice.EventFeed
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogInformation("error calling the api:{message}", ex.Message);
             }
         }
     }

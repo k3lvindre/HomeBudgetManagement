@@ -72,6 +72,8 @@ namespace HomeBudgetManagement.Infrastructure.EventFeed
                                                     DateTime.Now)
                                   );
 
+            _dbConnection.Close();
+
             Debug.WriteLine(resultCount);
         }
 
