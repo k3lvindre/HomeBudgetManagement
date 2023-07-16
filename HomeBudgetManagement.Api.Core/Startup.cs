@@ -2,6 +2,7 @@ using Autofac;
 using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
 using HomeBudgetManagement.API.Core.Infrastructure;
+using HomeBudgetManagement.Application.EventFeed;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using HomeBudgetManagement.Infrastructure.EventFeed;
 
 namespace HomeBudgetManagement.Api.Core
 {
@@ -91,6 +93,8 @@ namespace HomeBudgetManagement.Api.Core
             //container.RegisterModule(new MediatorModule());
             //container.RegisterModule(new ConfigurationModule(Configuration));
             //return new AutofacServiceProvider(container.Build());
+
+            services.AddTransient<IEventFeed, EventFeedSql>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

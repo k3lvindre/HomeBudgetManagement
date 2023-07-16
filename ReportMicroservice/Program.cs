@@ -1,9 +1,11 @@
 using ReportMicroservice;
+using ReportMicroservice.EventFeed;
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddHostedService<Worker>();
+        services.AddHttpClient<IEvenFeedConsumer, EventFeedConsumer>();
     })
      .ConfigureAppConfiguration((hostingContext, config) =>
      {
@@ -15,6 +17,7 @@ IHost host = Host.CreateDefaultBuilder(args)
                               optional: true, reloadOnChange: true);
 
          config.AddEnvironmentVariables();
+
      })
     .Build();
 

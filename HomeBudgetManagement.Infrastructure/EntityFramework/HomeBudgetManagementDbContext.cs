@@ -25,7 +25,7 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework
 
 
         public virtual DbSet<Expense> Expenses { get; set; }
-        public virtual DbSet<Account> Account { get; set; }
+        public virtual DbSet<Account> Accounts { get; set; }
 
     }
 }

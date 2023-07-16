@@ -1,4 +1,5 @@
-﻿using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+﻿using HomeBudgetManagement.Application.EventFeed;
+using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
 using HomeBudgetManagement.Core.Events;
 using HomeBudgetManagement.DTO;
 using MediatR;
@@ -11,10 +12,12 @@ namespace HomeBudgetManagement.Application.Commands
     public class CreatePayoutCommandHandler : IRequestHandler<CreateExpenseCommand, CreateExpenseResponseDto>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEventFeed _eventFeed;
 
-        public CreatePayoutCommandHandler(IUnitOfWork unitOfWork)
+        public CreatePayoutCommandHandler(IUnitOfWork unitOfWork, IEventFeed eventFeed)
         {
             _unitOfWork = unitOfWork;
+            _eventFeed = eventFeed;
         }
 
         public async Task<CreateExpenseResponseDto> Handle(CreateExpenseCommand command, CancellationToken cancellationToken)
@@ -35,11 +38,9 @@ namespace HomeBudgetManagement.Application.Commands
 
             await _unitOfWork.Expenses.AddAsync(expense);
 
-            //int result = await _unitOfWork.SaveChangesAsync();
-
             return new CreateExpenseResponseDto()
             {
-                IsCreated = 1 > 0
+                IsCreated = true
             };
         }
     }

@@ -1,4 +1,5 @@
-﻿using HomeBudgetManagement.Core.Events;
+﻿using HomeBudgetManagement.Application.EventFeed;
+using HomeBudgetManagement.Core.Events;
 using MediatR;
 
 namespace HomeBudgetManagement.Application.DomainEventHandlers
@@ -9,10 +10,12 @@ namespace HomeBudgetManagement.Application.DomainEventHandlers
     public class ExpenseModifiedEventHandler : INotificationHandler<ExpenseModifiedEvent>
     {
         IUnitOfWork _unitOfWork;
+        private readonly IEventFeed _eventFeed;
 
-        public ExpenseModifiedEventHandler(IUnitOfWork unitOfWork)
+        public ExpenseModifiedEventHandler(IUnitOfWork unitOfWork, IEventFeed eventFeed)
         {
             _unitOfWork = unitOfWork;
+            _eventFeed = eventFeed;
         }
 
         public async Task Handle(ExpenseModifiedEvent notification, CancellationToken cancellationToken)
@@ -23,8 +26,9 @@ namespace HomeBudgetManagement.Application.DomainEventHandlers
             {
                 account.Balance -= expense.Amount;
                 _unitOfWork.Accounts.Update(account);
-                await _unitOfWork.SaveChangesAsync();
             }
+
+            await _eventFeed.PublishAsync("ExpenseModifiedEvent", expense);
         }
     }
 }

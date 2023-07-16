@@ -1,12 +1,16 @@
+using ReportMicroservice.EventFeed;
+
 namespace ReportMicroservice
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private readonly IEvenFeedConsumer _evenFeedConsumer;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, IEvenFeedConsumer evenFeedConsumer)
         {
             _logger = logger;
+            _evenFeedConsumer = evenFeedConsumer;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -14,7 +18,9 @@ namespace ReportMicroservice
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+
+                await _evenFeedConsumer.ReadEventsAsync();
+                await Task.Delay(3000, stoppingToken);
             }
         }
     }

@@ -23,8 +23,9 @@ namespace HomeBudgetManagement.Application.Behaviors
 
             try
             {
-                _unitOfWork.CreateTransaction();
+                //_unitOfWork.CreateTransaction();
                 var response = await next();
+                await _unitOfWork.SaveChangesAsync();
                 return response;
             }
             catch (Exception)
@@ -32,10 +33,8 @@ namespace HomeBudgetManagement.Application.Behaviors
 
                 _unitOfWork.Rollback();
             }
-            finally
-            {
-                _unitOfWork.Commit();
-            }
+
+            //_unitOfWork.Commit();
 
             return default(TResponse);
         }
