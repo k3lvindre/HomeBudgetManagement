@@ -1,6 +1,8 @@
 ﻿using HomeBudgetManagement.Application;
 using HomeBudgetManagement.Application.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -14,6 +16,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     //Add the[Produces("application/json")] attribute to the API controller.
     //Its purpose is to declare that the controller's actions support a response content type of application/json:
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExpenseController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
