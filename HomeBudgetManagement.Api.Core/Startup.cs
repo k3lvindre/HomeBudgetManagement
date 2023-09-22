@@ -1,16 +1,22 @@
 using Autofac;
-using Autofac.Configuration;
 using Autofac.Extensions.DependencyInjection;
+using HomeBudgetManagement.Api.Core.Services;
 using HomeBudgetManagement.API.Core.Infrastructure;
 using HomeBudgetManagement.Application.EventFeed;
+using HomeBudgetManagement.Infrastructure.EventFeed;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using HomeBudgetManagement.Infrastructure.EventFeed;
+using System.Text;
 
 namespace HomeBudgetManagement.Api.Core
 {
@@ -49,6 +55,45 @@ namespace HomeBudgetManagement.Api.Core
             //Scoped lifetime services - are created once per request within the scope.It is equivalent to a singleton in the current scope.For example, in MVC it creates one instance for each HTTP request, but it uses the same instance in the other calls within the same web request.
             //Transient lifetime services - are created each time they are requested.This lifetime works best for lightweight, stateless services.
             services.AddCustomDbContext(Configuration);
+
+            //Identity setup
+            //Because the IdentityDbContext class is defined in a different assembly, I have to tell Entity Framework
+            //Core to create database migrations in the HomeBudgetManagement.Api.Core project
+            services.AddDbContext<IdentityDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("IdentityConnectionString"), x=>x.MigrationsAssembly("HomeBudgetManagement.Api.Core")), ServiceLifetime.Scoped);
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                options => {
+                    options.Password.RequiredLength = 4;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireNonAlphanumeric = false;
+                }).AddEntityFrameworkStores<IdentityDbContext>();
+
+            //Add authentication & challenge scheme
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                //add jwt bearer authentication
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateActor = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        RequireExpirationTime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration.GetSection("Jwt:Issuer").Value,
+                        ValidAudience =  Configuration.GetSection("Jwt:Audience").Value,
+                        //symmetric key is like having secret key that you can share to someone so he can have access too
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("Jwt:Key").Value))
+                    };
+                });
+
+
+            services.AddTransient<IAuthService, AuthService>();
 
             //run this on package manager
             //Install-Package Swashbuckle.AspNetCore -Version 6.2.3
@@ -125,6 +170,7 @@ namespace HomeBudgetManagement.Api.Core
             app.UseHealthChecks("/health");
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
