@@ -6,7 +6,7 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework
 {
     public class HomeBudgetManagementDbContext : DbContext
     {
-        public HomeBudgetManagementDbContext(DbContextOptions options) : base(options)
+        public HomeBudgetManagementDbContext(DbContextOptions<HomeBudgetManagementDbContext> options) : base(options)
         {
         }
 
