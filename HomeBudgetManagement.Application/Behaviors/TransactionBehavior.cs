@@ -23,6 +23,8 @@ namespace HomeBudgetManagement.Application.Behaviors
 
             try
             {
+                // Having unit of work saves the entire process at once which consider as
+                // ACID transaction
                 //_unitOfWork.CreateTransaction();
                 var response = await next();
                 await _unitOfWork.SaveChangesAsync();
