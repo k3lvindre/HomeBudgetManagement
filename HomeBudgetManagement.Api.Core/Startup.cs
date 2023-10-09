@@ -1,10 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HomeBudgetManagement.Api.Core.Services;
+using HomeBudgetManagement.Api.Core.Services.CustomAuthorization;
 using HomeBudgetManagement.API.Core.Infrastructure;
 using HomeBudgetManagement.Application.EventFeed;
 using HomeBudgetManagement.Infrastructure.EventFeed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -140,6 +142,14 @@ namespace HomeBudgetManagement.Api.Core
             //return new AutofacServiceProvider(container.Build());
 
             services.AddTransient<IEventFeed, EventFeedSql>();
+
+            //authorization
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("NickNamePolicy", policy =>
+                    policy.Requirements.Add(new CustomAuthorizaionRequirement("kelvs")));
+            });
+            services.AddSingleton<IAuthorizationHandler, CustomAuthorizaionHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

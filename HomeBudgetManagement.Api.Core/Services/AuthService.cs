@@ -25,6 +25,7 @@ namespace HomeBudgetManagement.Api.Core.Services
             {
                 new Claim(ClaimTypes.UserData, userAccount.UserName),
                 new Claim(ClaimTypes.Role,"Admin"),
+                new Claim("NickName", "kelv") //used at NickNamePolicy authorization 
             };
 
             var key = _configuration.GetSection("Jwt:Key").Value;

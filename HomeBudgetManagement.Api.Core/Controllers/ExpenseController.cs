@@ -42,6 +42,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         //}
 
         [HttpGet]
+        [Authorize(Policy = "NickNamePolicy")]
         public async Task<IActionResult> GetExpenses(GetExpenseQueryRequestDto request)
         {
             var query = new GetExpenseQuery()
