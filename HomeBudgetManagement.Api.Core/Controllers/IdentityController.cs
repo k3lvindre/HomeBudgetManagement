@@ -1,4 +1,5 @@
 ﻿using HomeBudgetManagement.Api.Core.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
     [ApiController]
-    [Route("api/identity")]
+    [Route("api/v1/identity")]
     public class IdentityController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -37,6 +38,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             return BadRequest();
         }
 
+        [Authorize]
         [HttpGet("{username}")]
         public async Task<IActionResult> GetUser(string username)
         {

@@ -1,17 +1,19 @@
 ﻿using HomeBudgetManagement.Application;
 using HomeBudgetManagement.Application.Commands;
+using HomeBudgetManagement.Application.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
-    [Route("api/Expenses")]
+    [Route("api/v1/Expenses")]
     [ApiController]
     //Add the[Produces("application/json")] attribute to the API controller.
     //Its purpose is to declare that the controller's actions support a response content type of application/json:
@@ -39,22 +41,29 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         //    else return NotFound();
         //}
 
-        //[HttpGet("{id:int}")]
-        //public async Task<IActionResult> GetBydId(int id)
-        //{
-        //    Expense expense =   await _unitOfWork.Expenses.GetByIdAsync(id);
-        //    if(expense == null)
-        //    {
-        //       return  NotFound();
-        //    }
-        //    else  return Ok(expense);
-        //}
+        [HttpGet]
+        [Authorize(Policy = "NickNamePolicy")]
+        public async Task<IActionResult> GetExpenses(GetExpenseQueryRequestDto request)
+        {
+            var query = new GetExpenseQuery()
+            {
+                ExpenseIds = request.ExpenseIds
+            };
+
+            var result = await _mediator.Send(query);
+
+            if (result.Any())
+            {
+                return Ok(result);
+            }
+            else return NotFound();
+        }
 
         //Adding triple-slash comments to an action enhances the Swagger UI by adding the description to the section header.
         //Add a<remarks> element to the Create action method documentation.
         //It supplements information specified in the<summary> element and provides a more robust Swagger UI.
         //The<remarks> element content can consist of text, JSON, or XML.
-        
+
         /// <summary>
         /// Creates a expense.
         /// </summary>
@@ -78,11 +87,6 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddExpense(CreateExpenseRequestDto expense)
         {
-            //Account account =  _accountRepository.GetAccountAsync();
-            //if(account.Balance >= expense.Amount)
-            //{
-            //await _unitOfWork.Expenses.AddAsync(expense);
-            //int result =  await _unitOfWork.SaveChangesAsync();
             var command = new CreateExpenseCommand()
             {
                 Description = expense.Description,
@@ -100,8 +104,6 @@ namespace HomeBudgetManagement.Api.Core.Controllers
                 return CreatedAtAction(nameof(AddExpense), 12);
             }
             else return BadRequest();
-            //}
-            //else return BadRequest("Insuficient Balance!");
         }
 
         //[HttpPut]
