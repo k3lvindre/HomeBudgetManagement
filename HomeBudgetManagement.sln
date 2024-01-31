@@ -44,7 +44,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetCore", "NetCore", "{C6C3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEnd", "FrontEnd", "{987D7530-8024-4032-AA15-643353C98140}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.Spa.React", "FrontEnd\HomeBudgetManagement.Spa.React\HomeBudgetManagement.Spa.React.csproj", "{F0849D9D-F7BF-45C6-9422-26364BBB2FCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeBudgetManagement.Spa.React", "FrontEnd\HomeBudgetManagement.Spa.React\HomeBudgetManagement.Spa.React.csproj", "{F0849D9D-F7BF-45C6-9422-26364BBB2FCF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diagram", "Diagram", "{B8ECD208-E8F7-4B3F-A09A-FADDD4F01C6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C4 Model", "C4 Model", "{C1F60A2E-D1DC-401B-B5ED-3A553528157A}"
+	ProjectSection(SolutionItems) = preProject
+		Diagram\C4 Model\Home Budget Management Architecture Diagram.drawio = Diagram\C4 Model\Home Budget Management Architecture Diagram.drawio
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +140,7 @@ Global
 		{3442B14B-2860-4823-978E-1A0DE29CE79D} = {23F0A627-147B-4514-A68B-CF279DE68E75}
 		{46B9FFEE-5AD7-47EC-937C-F8E988D1E795} = {C6C3B562-15E0-4056-A93D-CD8370D5B7E8}
 		{F0849D9D-F7BF-45C6-9422-26364BBB2FCF} = {987D7530-8024-4032-AA15-643353C98140}
+		{C1F60A2E-D1DC-401B-B5ED-3A553528157A} = {B8ECD208-E8F7-4B3F-A09A-FADDD4F01C6E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37EA834B-A51F-4C78-8000-840EF55B3F19}
