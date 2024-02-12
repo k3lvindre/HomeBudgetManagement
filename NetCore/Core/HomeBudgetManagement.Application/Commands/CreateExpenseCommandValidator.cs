@@ -2,9 +2,9 @@
 
 namespace HomeBudgetManagement.Application.Commands
 {
-    public class CreatePayoutCommandValidator : AbstractValidator<CreateExpenseCommand>
+    public class CreateExpenseCommandValidator : AbstractValidator<CreateExpenseCommand>
     {
-        public CreatePayoutCommandValidator()
+        public CreateExpenseCommandValidator()
         {
             RuleFor(obj => obj.Description).Length(1, 100).NotEmpty()
                 .WithMessage("Provides Description");
