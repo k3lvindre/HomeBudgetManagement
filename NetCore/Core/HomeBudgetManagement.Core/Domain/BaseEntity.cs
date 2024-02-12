@@ -1,18 +1,24 @@
-﻿using MediatR;
+﻿using HomeBudgetManagement.Core.ValueObject;
+using MediatR;
 using System.Text.Json.Serialization;
 
 namespace HomeBudgetManagement.Core.Domain
 {
-    public abstract class BaseEntity
+    public abstract record BaseEntity(
+        int Id, 
+        DateTime CreatedDate, 
+        string Description, 
+        ItemType ItemType, 
+        double Amount, 
+        byte[]? File, 
+        string? FileExtension)
     {
-        public  int Id { get; set; } = 0;
-        public DateTime CreatedDate { get; set; }
 
         [JsonIgnore]
-        private List<INotification> _domainEvents;
+        private List<INotification>? _domainEvents;
 
         [JsonIgnore]
-        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();
+        public IReadOnlyCollection<INotification>? DomainEvents => _domainEvents?.AsReadOnly();
 
         public void AddDomainEvent(INotification eventItem)
         {
@@ -20,14 +26,8 @@ namespace HomeBudgetManagement.Core.Domain
             _domainEvents.Add(eventItem);
         }
 
-        public void RemoveDomainEvent(INotification eventItem)
-        {
-            _domainEvents?.Remove(eventItem);
-        }
+        public void RemoveDomainEvent(INotification eventItem) => _domainEvents?.Remove(eventItem);
 
-        public void ClearDomainEvents()
-        {
-            _domainEvents?.Clear();
-        }
+        public void ClearDomainEvents() => _domainEvents?.Clear();
     }
 }
