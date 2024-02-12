@@ -6,5 +6,8 @@ namespace HomeBudgetManagement.DTO
     {
         [JsonPropertyName("isCreated")]
         public bool IsCreated { get; set; }
+
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
     }
 }
