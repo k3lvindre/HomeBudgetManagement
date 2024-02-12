@@ -1,6 +1,6 @@
 ﻿//****USE FOR General Reposisotry pattern rather that indivudal Repository****//
-using HomeBudgetManagement.Application;
 using HomeBudgetManagement.Core.Domain;
+using HomeBudgetManagement.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
@@ -42,7 +42,7 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
 
         public async virtual Task<List<T>> GetAllAsync() => await _entity.ToListAsync<T>();
 
-        public async virtual Task<T> GetByIdAsync(int? id) => await _entity.FindAsync(id);
+        public async virtual Task<T?> GetByIdAsync(int id) => await _entity.FindAsync(id);
 
         public virtual void Update(T entity)
         {

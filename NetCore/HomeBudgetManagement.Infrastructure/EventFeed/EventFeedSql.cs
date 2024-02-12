@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using HomeBudgetManagement.Application.EventFeed;
+using HomeBudgetManagement.SharedKernel;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

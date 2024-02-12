@@ -1,6 +1,4 @@
-﻿using HomeBudgetManagement.Application.Repository;
-using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
-using Microsoft.EntityFrameworkCore;
+﻿using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
 {
@@ -11,11 +9,6 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
         public ExpenseRepository(HomeBudgetManagementDbContext context) : base(context)
         {
             _context = context;
-        }
-
-        public async Task<IEnumerable<Expense>> GetExpenseByTypeAsync(string type)
-        {
-            return await _context.Expenses.Where(x => x.Type == type).ToListAsync<Expense>();
         }
     }
 

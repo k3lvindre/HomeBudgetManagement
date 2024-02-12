@@ -1,12 +1,9 @@
 ﻿//****USE FOR General Reposisotry pattern rather that indivudal Repository****//
 
-using HomeBudgetManagement.Application;
 using HomeBudgetManagement.Core.Domain;
-using HomeBudgetManagement.Core.Domain.AccountAggregate;
-using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+using HomeBudgetManagement.SharedKernel;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Storage;
-using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework
 {
@@ -14,35 +11,13 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework
     {
         private readonly HomeBudgetManagementDbContext _context;
         private IDbContextTransaction? _transaction = null;
-        private readonly IGenericRepository<Expense> _expenses;
-        private readonly IGenericRepository<Account> _account;
         private readonly IMediator _mediator;
 
         public UnitOfWork(HomeBudgetManagementDbContext context,
-            IGenericRepository<Expense> expenses,
-            IGenericRepository<Account> account,
             IMediator mediator)
         {
             _context = context;
-            _expenses = expenses;
-            _account = account;
             _mediator = mediator;
-        }
-
-        public IGenericRepository<Expense> Expenses
-        {
-            get
-            {
-                return _expenses;
-            }
-        }
-
-        public IGenericRepository<Account> Accounts
-        {
-            get
-            {
-                return _account;
-            }
         }
 
         public void Commit()
@@ -72,7 +47,7 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework
 
 
             var domainEvents = domainEntities
-                                   .SelectMany(e => e.DomainEvents)
+                                   .SelectMany(e => e.DomainEvents!)
                                    .ToList();
 
             var tasks = domainEvents.Select(domainEvent => _mediator.Publish(domainEvent));

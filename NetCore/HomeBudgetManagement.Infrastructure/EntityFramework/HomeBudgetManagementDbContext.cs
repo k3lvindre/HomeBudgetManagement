@@ -1,5 +1,4 @@
-﻿using HomeBudgetManagement.Core.Domain.AccountAggregate;
-using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+﻿using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework
@@ -25,7 +24,5 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework
 
 
         public virtual DbSet<Expense> Expenses { get; set; }
-        public virtual DbSet<Account> Accounts { get; set; }
-
     }
 }
