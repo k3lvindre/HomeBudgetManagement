@@ -1,14 +1,12 @@
-﻿namespace HomeBudgetManagement.Core.Domain.ExpenseAggregate
+﻿using HomeBudgetManagement.Core.ValueObject;
+
+namespace HomeBudgetManagement.Core.Domain.ExpenseAggregate
 {
-    //[Table("Expense")] //commented out so all edm should only be configure
+    //[Table("Income")] //commented out so all edm(entity data model) should only be configure
     //inside dbcontext so it is easy to maintain and for separation of concern
-    public class Expense : BaseEntity
-    {
-        public required string Description { get; set; }
-        public required string Type { get; set; }
-        public double Amount { get; set; }
-        public byte[]? File { get; set; }
-        public string? FileExtension { get; set; }
-        public int AccountId { get; set; }
-    }
+
+    //Records are value types with immutable semantics. Once a record is created, its properties cannot be modified.
+    //Records are also suitable for data transfer objects (DTOs)
+    public record Expense (int Id, DateTime CreatedDate, string Description, ItemType ItemType, double Amount, byte[]? File, string? FileExtension) 
+            : BaseEntity(Id, CreatedDate, Description, ItemType, Amount, File, FileExtension);
 }
