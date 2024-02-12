@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Ocelot.Values;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +12,7 @@ configuration.SetBasePath(builder.Environment.ContentRootPath)
 
 //ocelot
 builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddHealthChecks();
 
 //this is how to Add authentication & challenge scheme to api gateway
 //This config(scheme & IssuerSigningKey) must matched with HomeBudgetManagement.Api.Core so authentication for this api gateway
@@ -39,10 +39,33 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
+//cors with policy
+//services.AddCors(options => {
+//    options.AddPolicy("AllowAllOrigins", builder =>
+//        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+//    options.AddPolicy("AllowOnlyGet", builder =>
+//        builder.WithMethods("GET").AllowAnyHeader().AllowAnyOrigin());
+//});
+//this can be use in action or controller
+//[EnableCors("AllowAllOrigins")]
+//public IActionResult GetAllRecords(
+//{
+////Call some service to get records
+//return View();
+//} 
+builder.Services.AddCors();
+
 var app = builder.Build();
+
+
+//in real world you should allow from known origin like x.WithOrigins("http://www.example.com")
+//other example:
+//app.UseCors(policyBuilder => policyBuilder.WithHeaders("accept,contenttype").AllowAnyOrigin().WithMethods("GET, POST"));
+app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 //add ocelot middleware
 await app.UseOcelot();
+app.UseHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();
 
