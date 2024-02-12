@@ -53,6 +53,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C4 Model", "C4 Model", "{C1
 		Diagram\C4 Model\Home Budget Management Architecture Diagram.drawio = Diagram\C4 Model\Home Budget Management Architecture Diagram.drawio
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.SharedKernel", "NetCore\HomeBudgetManagement.SharedKernel\HomeBudgetManagement.SharedKernel.csproj", "{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{F0849D9D-F7BF-45C6-9422-26364BBB2FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0849D9D-F7BF-45C6-9422-26364BBB2FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0849D9D-F7BF-45C6-9422-26364BBB2FCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -141,6 +147,7 @@ Global
 		{46B9FFEE-5AD7-47EC-937C-F8E988D1E795} = {C6C3B562-15E0-4056-A93D-CD8370D5B7E8}
 		{F0849D9D-F7BF-45C6-9422-26364BBB2FCF} = {987D7530-8024-4032-AA15-643353C98140}
 		{C1F60A2E-D1DC-401B-B5ED-3A553528157A} = {B8ECD208-E8F7-4B3F-A09A-FADDD4F01C6E}
+		{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF} = {C6C3B562-15E0-4056-A93D-CD8370D5B7E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {37EA834B-A51F-4C78-8000-840EF55B3F19}
