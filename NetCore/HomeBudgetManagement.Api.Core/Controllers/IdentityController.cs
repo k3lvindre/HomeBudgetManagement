@@ -25,7 +25,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] UserAccount user)
+        public async Task<IActionResult> CreateUser(UserAccount user)
         {
             if(ModelState.IsValid)
             {
@@ -59,6 +59,9 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             if(ModelState.IsValid)
             {
                 var user = await _userManager.FindByNameAsync(account.UserName);
+
+                if (user is null) return NotFound();
+
                 var result = await _signinManager.PasswordSignInAsync(user,  account.Password, false, false);
                 if(result.Succeeded)
                 {

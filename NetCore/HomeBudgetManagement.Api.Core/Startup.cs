@@ -3,8 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using HomeBudgetManagement.Api.Core.Services;
 using HomeBudgetManagement.Api.Core.Services.CustomAuthorization;
 using HomeBudgetManagement.API.Core.Infrastructure;
-using HomeBudgetManagement.Application.EventFeed;
-using HomeBudgetManagement.Infrastructure.EventFeed;
+using HomeBudgetManagement.Application.Behaviors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +39,10 @@ namespace HomeBudgetManagement.Api.Core
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Singleton - which creates a single instance throughout the application.It creates the instance for the first time and reuses the same object in the all calls.
+            //Scoped lifetime services - are created once per request within the scope.It is equivalent to a singleton in the current scope.For example, in MVC it creates one instance for each HTTP request, but it uses the same instance in the other calls within the same web request.
+            //Transient lifetime services - are created each time they are requested.This lifetime works best for lightweight, stateless services.
+
             services.AddControllers()
                 //fix case sensitivity of properties of returned entity from the controller when consumed by client
                 //during deserialization
@@ -47,17 +50,14 @@ namespace HomeBudgetManagement.Api.Core
                     x.JsonSerializerOptions.PropertyNamingPolicy = null;
                  });
 
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HomeBudgetManagement.API.Core", Version = "v1" });
-            //});
+           
+            #region Domain services
+            //application module
+            services.AddApplicationDataServices(Configuration)
+                .AddApplicantEventHandler();
+            #endregion
 
-
-            //Singleton - which creates a single instance throughout the application.It creates the instance for the first time and reuses the same object in the all calls.
-            //Scoped lifetime services - are created once per request within the scope.It is equivalent to a singleton in the current scope.For example, in MVC it creates one instance for each HTTP request, but it uses the same instance in the other calls within the same web request.
-            //Transient lifetime services - are created each time they are requested.This lifetime works best for lightweight, stateless services.
-            services.AddCustomDbContext(Configuration);
-
+            #region Authentication
             //Identity setup
             //Because the IdentityDbContext class is defined in a different assembly, I have to tell Entity Framework
             //Core to create database migrations in the HomeBudgetManagement.Api.Core project
@@ -68,6 +68,7 @@ namespace HomeBudgetManagement.Api.Core
                     options.Password.RequireDigit = false;
                     options.Password.RequireLowercase = false;
                     options.Password.RequiredUniqueChars = 0;
+                    options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                 }).AddEntityFrameworkStores<IdentityDbContext>();
 
@@ -93,10 +94,21 @@ namespace HomeBudgetManagement.Api.Core
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("Jwt:Key").Value))
                     };
                 });
+            #endregion 
 
+            #region Authorization
 
             services.AddTransient<IAuthService, AuthService>();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("NickNamePolicy", policy =>
+                    policy.Requirements.Add(new CustomAuthorizaionRequirement("kelvs")));
+            });
+            services.AddSingleton<IAuthorizationHandler, CustomAuthorizaionHandler>();
 
+            #endregion
+
+            #region Swagger
             //run this on package manager
             //Install-Package Swashbuckle.AspNetCore -Version 6.2.3
             //Enable the middleware for serving the generated JSON document and the Swagger UI
@@ -129,8 +141,32 @@ namespace HomeBudgetManagement.Api.Core
                     }
                 });
             });
+
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "HomeBudgetManagement.API.Core", Version = "v1" });
+            //});
+            #endregion
+
             services.AddHealthChecks();
 
+            //cors with policy
+            //services.AddCors(options => {
+            //    options.AddPolicy("AllowAllOrigins", builder =>
+            //        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            //    options.AddPolicy("AllowOnlyGet", builder =>
+            //        builder.WithMethods("GET").AllowAnyHeader().AllowAnyOrigin());
+            //});
+            //this can be use in action or controller
+            //[EnableCors("AllowAllOrigins")]
+            //public IActionResult GetAllRecords(
+            //{
+            ////Call some service to get records
+            //return View();
+            //} 
+            services.AddCors();
+
+            //AutoFac
             //This example shows ASP.NET Core 1.1 - 2.2 usage,
             //where you return an IServiceProvider from the ConfigureServices(IServiceCollection services) delegate.
             //This is not for ASP.NET Core 3+ or the .NET Core 3+ generic hosting support -
@@ -140,16 +176,19 @@ namespace HomeBudgetManagement.Api.Core
             //container.RegisterModule(new MediatorModule());
             //container.RegisterModule(new ConfigurationModule(Configuration));
             //return new AutofacServiceProvider(container.Build());
+        }
 
-            services.AddTransient<IEventFeed, EventFeedSql>();
-
-            //authorization
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("NickNamePolicy", policy =>
-                    policy.Requirements.Add(new CustomAuthorizaionRequirement("kelvs")));
-            });
-            services.AddSingleton<IAuthorizationHandler, CustomAuthorizaionHandler>();
+        //kELVIN: METHOD USE BY AUTOFAC TO REGISTER SERVICES.
+        // ConfigureContainer is where you can register things directly
+        // with Autofac. This runs after ConfigureServices so the things
+        // here will override registrations made in ConfigureServices.
+        // Don't build the container; that gets done for you by the factory.
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            // Register your own things directly with Autofac here. Don't
+            // call builder.Populate(), that happens in AutofacServiceProviderFactory
+            // for you.
+            builder.RegisterModule(new MediatorModule());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -176,6 +215,10 @@ namespace HomeBudgetManagement.Api.Core
             // can use the convenience extension method GetAutofacRoot.
             AutofacContainer = app.ApplicationServices.GetAutofacRoot();
 
+            //in real world you should allow from known origin like x.WithOrigins("http://www.example.com")
+            //other example:
+            //app.UseCors(policyBuilder => policyBuilder.WithHeaders("accept,contenttype").AllowAnyOrigin().WithMethods("GET, POST"));
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
             app.UseHealthChecks("/health");
             app.UseRouting();
@@ -188,19 +231,6 @@ namespace HomeBudgetManagement.Api.Core
                 endpoints.MapControllers();
             });
             
-        }
-
-        //kELVIN: METHOD USE BY AUTOFAC TO REGISTER SERVICES.
-        // ConfigureContainer is where you can register things directly
-        // with Autofac. This runs after ConfigureServices so the things
-        // here will override registrations made in ConfigureServices.
-        // Don't build the container; that gets done for you by the factory.
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            // Register your own things directly with Autofac here. Don't
-            // call builder.Populate(), that happens in AutofacServiceProviderFactory
-            // for you.
-            builder.RegisterModule(new MediatorModule());
         }
     }
 }

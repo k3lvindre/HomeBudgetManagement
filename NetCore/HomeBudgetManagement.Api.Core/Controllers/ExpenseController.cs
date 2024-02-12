@@ -1,12 +1,10 @@
-﻿using HomeBudgetManagement.Application;
-using HomeBudgetManagement.Application.Commands;
-using HomeBudgetManagement.Application.Query;
+﻿using HomeBudgetManagement.Application.Commands;
+using HomeBudgetManagement.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,12 +19,10 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ExpenseController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediator;
 
-        public ExpenseController(IUnitOfWork unitOfWork, IMediator mediator)
+        public ExpenseController(IMediator mediator)
         {
-            _unitOfWork = unitOfWork;
             _mediator = mediator;
         }
 
@@ -41,23 +37,23 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         //    else return NotFound();
         //}
 
-        [HttpGet]
-        [Authorize(Policy = "NickNamePolicy")]
-        public async Task<IActionResult> GetExpenses(GetExpenseQueryRequestDto request)
-        {
-            var query = new GetExpenseQuery()
-            {
-                ExpenseIds = request.ExpenseIds
-            };
+        //[HttpGet]
+        //[Authorize(Policy = "NickNamePolicy")]
+        //public async Task<IActionResult> GetExpenses()
+        //{
+        //    var query = new GetExpenseQuery()
+        //    {
+        //        ExpenseIds = request.ExpenseIds
+        //    };
 
-            var result = await _mediator.Send(query);
+        //    var result = await _mediator.Send(query);
 
-            if (result.Any())
-            {
-                return Ok(result);
-            }
-            else return NotFound();
-        }
+        //    if (result.Any())
+        //    {
+        //        return Ok(result);
+        //    }
+        //    else return NotFound();
+        //}
 
         //Adding triple-slash comments to an action enhances the Swagger UI by adding the description to the section header.
         //Add a<remarks> element to the Create action method documentation.
@@ -91,8 +87,6 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             {
                 Description = expense.Description,
                 Amount = expense.Amount,
-                Type  = expense.Type,
-                AccountId = expense.AccountId,
                 File = expense.File,
                 FileExtension = expense.FileExtension,
             };
@@ -100,8 +94,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             var result = await _mediator.Send(command);
             if (result.IsCreated)
             {
-                //return CreatedAtAction(nameof(Get), new { id = expense.Id }, expense);
-                return CreatedAtAction(nameof(AddExpense), 12);
+                return CreatedAtAction(nameof(AddExpense), result.Id);
             }
             else return BadRequest();
         }

@@ -24,12 +24,12 @@ namespace HomeBudgetManagement.API.Core.Infrastructure
                 .AsClosedTypesOf(typeof(IRequestHandler<,>));
 
             // Register the DomainEventHandler classes (they implement INotificationHandler<>) in assembly holding the Domain Events
-            builder.RegisterAssemblyTypes(typeof(ExpenseModifiedEventHandler).GetTypeInfo().Assembly)
+            builder.RegisterAssemblyTypes(typeof(ModifiedEventHandler<>).GetTypeInfo().Assembly)
                 .AsClosedTypesOf(typeof(INotificationHandler<>));
 
             //// Register the Command's Validators (Validators based on FluentValidation library)
             builder
-                .RegisterAssemblyTypes(typeof(CreatePayoutCommandValidator).GetTypeInfo().Assembly)
+                .RegisterAssemblyTypes(typeof(CreateExpenseCommandValidator).GetTypeInfo().Assembly)
                 .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
                 .AsImplementedInterfaces();
 

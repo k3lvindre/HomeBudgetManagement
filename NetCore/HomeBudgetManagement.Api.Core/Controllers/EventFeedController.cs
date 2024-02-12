@@ -1,4 +1,4 @@
-﻿using HomeBudgetManagement.Application.EventFeed;
+﻿using HomeBudgetManagement.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
