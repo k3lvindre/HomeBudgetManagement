@@ -13,7 +13,7 @@ namespace HomeBudgetManagement.Api.Core
     {
         public static IServiceCollection AddApplicationDataServices(this IServiceCollection services,  IConfiguration configuration)
         {
-            services.AddDbContext<HomeBudgetManagementDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("HbmConnectionString")), ServiceLifetime.Scoped);
+            services.AddDbContext<HomeBudgetManagementDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("HbmConnectionString"), b => b.MigrationsAssembly("HomeBudgetManagement.Api.Core")), ServiceLifetime.Scoped);
             //must replace with func<string, IGenericRepository> to get IGenericRepository by name in case of diff. implementation of IGenericRepository
             services.AddTransient<IBudgetRepository, BudgetRepository>();
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
