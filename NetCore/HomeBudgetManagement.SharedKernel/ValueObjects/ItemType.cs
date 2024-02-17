@@ -1,4 +1,4 @@
-﻿namespace HomeBudgetManagement.Core.ValueObject
+﻿namespace HomeBudgetManagement.SharedKernel.ValueObjects
 {
     public enum ItemType : int
     {

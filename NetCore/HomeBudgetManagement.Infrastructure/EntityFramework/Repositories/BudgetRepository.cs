@@ -1,5 +1,5 @@
 ﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
-using HomeBudgetManagement.Core.ValueObject;
+using HomeBudgetManagement.SharedKernel.ValueObjects;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
 {

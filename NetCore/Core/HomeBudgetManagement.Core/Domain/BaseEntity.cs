@@ -1,4 +1,4 @@
-﻿using HomeBudgetManagement.Core.ValueObject;
+﻿using HomeBudgetManagement.SharedKernel.ValueObjects;
 using MediatR;
 using System.Text.Json.Serialization;
 

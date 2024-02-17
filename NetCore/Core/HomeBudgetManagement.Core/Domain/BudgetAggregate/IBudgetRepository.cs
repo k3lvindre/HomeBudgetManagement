@@ -1,5 +1,5 @@
-﻿using HomeBudgetManagement.Core.ValueObject;
-using HomeBudgetManagement.SharedKernel;
+﻿using HomeBudgetManagement.SharedKernel;
+using HomeBudgetManagement.SharedKernel.ValueObjects;
 
 namespace HomeBudgetManagement.Core.Domain.BudgetAggregate
 {
