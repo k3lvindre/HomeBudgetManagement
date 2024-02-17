@@ -1,4 +1,4 @@
-﻿using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework
@@ -23,6 +23,7 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework
         }
 
 
-        public virtual DbSet<Expense> Expenses { get; set; }
+        public virtual DbSet<Budget> Budget { get; set; }
+        public virtual DbSet<FileAttachment> FileAttachment { get; set; }
     }
 }

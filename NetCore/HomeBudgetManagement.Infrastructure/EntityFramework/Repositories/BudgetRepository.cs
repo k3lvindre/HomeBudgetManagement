@@ -1,14 +1,20 @@
-﻿using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
+using HomeBudgetManagement.Core.ValueObject;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
 {
-    public class ExpenseRepository : GenericRepository<Expense>, IExpenseRepository
+    public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
     {
         private readonly HomeBudgetManagementDbContext _context;
 
-        public ExpenseRepository(HomeBudgetManagementDbContext context) : base(context)
+        public BudgetRepository(HomeBudgetManagementDbContext context) : base(context)
         {
             _context = context;
+        }
+
+        public Task<List<Budget>> GetByTypeAsync(ItemType itemType)
+        {
+            throw new NotImplementedException();
         }
     }
 
