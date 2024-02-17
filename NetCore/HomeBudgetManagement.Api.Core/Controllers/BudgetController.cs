@@ -1,4 +1,5 @@
 ﻿using HomeBudgetManagement.Application.Commands;
+using HomeBudgetManagement.Application.Query;
 using HomeBudgetManagement.DTO;
 using HomeBudgetManagement.SharedKernel.ValueObjects;
 using MediatR;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -27,16 +29,23 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             _mediator = mediator;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> Get()
-        //{
-        //    List<Expense> expenses =  await _unitOfWork.Expenses.GetAllAsync();
-        //    if (expenses.Any())
-        //    {
-        //        return Ok(expenses);
-        //    }
-        //    else return NotFound();
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Get(GetBudgetQueryRequestDto? getExpenseQueryRequestDto)
+        {
+            var query = new GetExpenseQuery()
+            {
+                ListOfId = getExpenseQueryRequestDto?.ListOfId,
+                Type =(ItemType?)getExpenseQueryRequestDto?.Type
+            };
+
+            var result = await _mediator.Send(query);
+            if (result is not null && result.Any())
+            {
+                return Ok(result);
+            }
+
+            else return NotFound();
+        }
 
         //[HttpGet]
         //[Authorize(Policy = "NickNamePolicy")]
