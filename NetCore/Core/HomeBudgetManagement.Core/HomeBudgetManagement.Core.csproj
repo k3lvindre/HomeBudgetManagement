@@ -12,11 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\IncomeAggregate\" />
-    <Folder Include="Domain\SavingAggregate\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\HomeBudgetManagement.SharedKernel\HomeBudgetManagement.SharedKernel.csproj" />
   </ItemGroup>
 

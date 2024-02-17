@@ -1,4 +1,4 @@
-﻿using HomeBudgetManagement.Core.Domain.ExpenseAggregate;
+﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
 using MediatR;
 
 namespace HomeBudgetManagement.Core.Events

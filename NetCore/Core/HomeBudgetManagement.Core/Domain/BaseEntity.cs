@@ -6,12 +6,10 @@ namespace HomeBudgetManagement.Core.Domain
 {
     public abstract record BaseEntity(
         int Id, 
-        DateTime CreatedDate, 
-        string Description, 
-        ItemType ItemType, 
-        double Amount, 
-        byte[]? File, 
-        string? FileExtension)
+        string Description,
+        double Amount,
+        ItemType ItemType,
+        DateTime CreatedDate) 
     {
 
         [JsonIgnore]
