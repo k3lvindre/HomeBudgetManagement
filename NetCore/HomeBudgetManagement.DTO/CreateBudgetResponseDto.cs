@@ -2,7 +2,7 @@
 
 namespace HomeBudgetManagement.DTO
 {
-    public class CreateExpenseResponseDto
+    public class CreateBudgetResponseDto
     {
         [JsonPropertyName("isCreated")]
         public bool IsCreated { get; set; }

@@ -1,5 +1,6 @@
 ﻿using HomeBudgetManagement.Application.Commands;
 using HomeBudgetManagement.DTO;
+using HomeBudgetManagement.SharedKernel.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,17 +12,17 @@ using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
-    [Route("api/v1/Expenses")]
+    [Route("api/v1/[thiswillreplacebycontrollername]")]
     [ApiController]
     //Add the[Produces("application/json")] attribute to the API controller.
     //Its purpose is to declare that the controller's actions support a response content type of application/json:
     [Produces("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ExpenseController : ControllerBase
+    public class BudgetController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ExpenseController(IMediator mediator)
+        public BudgetController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -81,12 +82,13 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddExpense(CreateExpenseRequestDto expense)
+        public async Task<IActionResult> AddExpense(CreateBudgetRequestDto expense)
         {
-            var command = new CreateExpenseCommand()
+            var command = new CreateBudgetCommand()
             {
                 Description = expense.Description,
                 Amount = expense.Amount,
+                ItemType = (ItemType)expense.Type,
                 File = expense.File,
                 FileExtension = expense.FileExtension,
             };

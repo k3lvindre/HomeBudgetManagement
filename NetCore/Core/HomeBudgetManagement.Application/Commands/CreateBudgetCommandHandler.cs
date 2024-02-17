@@ -5,7 +5,7 @@ using MediatR;
 
 namespace HomeBudgetManagement.Application.Commands
 {
-    public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, CreateExpenseResponseDto>
+    public class CreateBudgetCommandHandler : IRequestHandler<CreateBudgetCommand, CreateBudgetResponseDto>
     {
         private readonly IBudgetRepository _budgetRepository;
 
@@ -14,7 +14,7 @@ namespace HomeBudgetManagement.Application.Commands
             _budgetRepository = budgetRepository;
         }
 
-        public async Task<CreateExpenseResponseDto> Handle(CreateBudgetCommand command, CancellationToken cancellationToken)
+        public async Task<CreateBudgetResponseDto> Handle(CreateBudgetCommand command, CancellationToken cancellationToken)
         {
 
             var itemToAdd = new Budget()
@@ -30,7 +30,7 @@ namespace HomeBudgetManagement.Application.Commands
 
             await _budgetRepository.AddAsync(itemToAdd);
 
-            return new CreateExpenseResponseDto()
+            return new CreateBudgetResponseDto()
             {
                 IsCreated = true,
                 Id = itemToAdd.Id

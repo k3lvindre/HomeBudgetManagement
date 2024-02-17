@@ -2,7 +2,7 @@
 
 namespace HomeBudgetManagement.DTO
 {
-    public class ExpenseDto
+    public class BudgetDto
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
