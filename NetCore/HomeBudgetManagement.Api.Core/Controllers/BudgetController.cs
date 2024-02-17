@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
-    [Route("api/v1/[thiswillreplacebycontrollername]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     //Add the[Produces("application/json")] attribute to the API controller.
     //Its purpose is to declare that the controller's actions support a response content type of application/json:
