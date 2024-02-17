@@ -4,13 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace HomeBudgetManagement.Core.Domain
 {
-    public abstract record BaseEntity(
-        int Id, 
-        string Description,
-        double Amount,
-        ItemType ItemType,
-        DateTime CreatedDate) 
+    public abstract class BaseEntity
     {
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public double Amount { get; set; }
+        public ItemType ItemType { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [JsonIgnore]
         private List<INotification>? _domainEvents;
