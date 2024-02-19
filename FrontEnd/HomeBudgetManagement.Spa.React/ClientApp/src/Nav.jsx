@@ -28,7 +28,7 @@ const Nav = ({ logo }) => {
                         <Link className="nav-link" to="/">Home</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/expense/create">Create Expense</Link>
+                        <Link className="nav-link" to="/budget/create">Create</Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/about">About</Link>

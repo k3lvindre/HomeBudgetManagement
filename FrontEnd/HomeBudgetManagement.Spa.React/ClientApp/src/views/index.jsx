@@ -1,8 +1,12 @@
 import React from 'react';
+import  ItemList  from './budget/ItemList';
+
 const Home = () => {
     return (
-        <p>Hello World!</p>
+        <p>
+            <ItemList />
+        </p>
     )
 }
 
-export default Home
+export default Home;

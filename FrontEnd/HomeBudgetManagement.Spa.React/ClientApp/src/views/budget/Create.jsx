@@ -1,45 +1,46 @@
 // src/views/expense/CreateExpenseForm.jsx
 import React, { useState } from 'react';
 
-const CreateExpenseForm = () => {
-    const [description, setProductName] = useState('');
-    const [amount, setProductPrice] = useState('');
+const CreateBudgetForm= () => {
+    const [description, setDescription] = useState('');
+    const [amount, setAmount] = useState('');
 
-    const handleNameChange = (e) => setProductName(e.target.value);
-    const handlePriceChange = (e) => setProductPrice(e.target.value);
+    const handleDescriptionChange = (e) => setDescription(e.target.value);
+    const handleAmountChange = (e) => setAmount(e.target.value);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try
         {
-            var expense = {
+            var request = {
                 description: description,
-                amount: amount
+                amount: amount,
+                type: 2
             };
 
-            var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3VzZXJkYXRhIjoia2VsdmluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJOaWNrTmFtZSI6ImtlbHYiLCJleHAiOjE3MDY4MjkxMzgsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9._pjmF6G-5zegVL2Pmguu5wULGf_07_EYVXrT9QeQzwSnQZ92F5afsfKhS_vICz2UehQ7Fe6Usg3WgSD95_2MTA";
-            const response = await fetch('http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/expenses', {
+            var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3VzZXJkYXRhIjoia2VsdmluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJOaWNrTmFtZSI6ImtlbHYiLCJleHAiOjE3MDgzNDAxNzQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.WTPouTAoMouhagJx4JifkW5aP1Lm_IvMTVezJX-L4StCWYPhGgoD_u2zghCu-adp3jEl8n0lJ9cmAWjPyenKPg";
+            const response = await fetch('http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/budget', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(expense),
+                body: JSON.stringify(request),
             });
 
             if (response.ok) {
-                console.log('Expense created');
+                console.log('Item reated.');
             }
-            // Optionally, you can redirect or update the product list
+            // Optionally, you can redirect or update the list
         } catch (error) {
-            console.error('Error creating expense:', error);
+            console.error('Error creating item:', error);
         }
     };
 
     return (
         <div className="container mt-5">
-              <h2 className="mb-4">Create a New Expense</h2>
+              <h2 className="mb-4">Create an Item</h2>
               <form onSubmit={handleSubmit}>
                     <div className="form-group">
                       <label htmlFor="description">Description</label>
@@ -48,7 +49,7 @@ const CreateExpenseForm = () => {
                         className="form-control"
                         id="description"
                         value={description}
-                        onChange={handleNameChange}
+                        onChange={handleDescriptionChange}
                         required
                       />
                     </div>
@@ -59,16 +60,16 @@ const CreateExpenseForm = () => {
                         className="form-control"
                         id="amount"
                         value={amount}
-                        onChange={handlePriceChange}
+                        onChange={handleAmountChange}
                         required
                       />
                     </div>
                     <button type="submit" className="btn btn-primary">
-                      Create Expense
+                      Save
                     </button>
               </form>
         </div>
     );
 };
 
-export default CreateExpenseForm;
+export default CreateBudgetForm;
