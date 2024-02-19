@@ -30,7 +30,21 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(GetBudgetQueryRequestDto? getExpenseQueryRequestDto)
+        public async Task<IActionResult> Get()
+        {
+            var query = new GetExpenseQuery();
+
+            var result = await _mediator.Send(query);
+            if (result is not null && result.Any())
+            {
+                return Ok(result);
+            }
+
+            else return NotFound();
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> Search(GetBudgetQueryRequestDto getExpenseQueryRequestDto)
         {
             var query = new GetExpenseQuery()
             {
