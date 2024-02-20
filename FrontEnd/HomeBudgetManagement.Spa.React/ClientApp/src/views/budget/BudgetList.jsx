@@ -1,60 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
-const ItemList = () => {
+const BudgetList = () => {
+    var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3VzZXJkYXRhIjoia2VsdmluMiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiTmlja05hbWUiOiJrZWx2IiwiZXhwIjoxNzA4Mzk4NzczLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAifQ.Wq5Lyn7xY4CU4sq1Wv_uisQ0w1J349Q2v1RLeDDzF0tRWviW3R-mf8sQoh6dfXrjifde0o5S2Dha1rzAJy3Jzg";
+
     const [items, setItems] = useState([]);
     const [sum, setSum] = useState(0);
     const [selectedSearchOption, setSelectedSearchOption] = useState('0');
 
-    var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3VzZXJkYXRhIjoia2VsdmluIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJOaWNrTmFtZSI6ImtlbHYiLCJleHAiOjE3MDgzNDAxNzQsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NTAwMCJ9.WTPouTAoMouhagJx4JifkW5aP1Lm_IvMTVezJX-L4StCWYPhGgoD_u2zghCu-adp3jEl8n0lJ9cmAWjPyenKPg";
-
+    //useEffect takes a function as its first argument, and the second argument is an array of dependencies. 
+    //If the dependency array is empty([]), the effect will run only once after the initial render, 
+    //simulating the behavior of componentDidMount.If you provide dependencies, the effect will re - run whenever
+    //any of those dependencies change.
+    //In summary, componentDidMount is used in class components, and useEffect is used in functional components to achieve similar effects.
     useEffect(() =>
     {
-        getData();
-    }, []);
+        getData(selectedSearchOption);
+    }, [selectedSearchOption]); //in 2nd argument you can pass any value here(e.g selectedSearchOption) that if it changed it will rerun all the logic inside this so like tracking value changes then updates.
 
-    var getData = () => {
+    var getData = (searchValue) => {
         // Fetch data from your API endpoint
-        fetch('http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/budget',
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                setItems(data);
-                setSum(computeSum(data));
-            });
-    }
-
-    const handleView = (itemId) => {
-        // Implement the view logic here
-        console.log(`View item with ID: ${itemId}`);
-    };
-
-    const handleUpdate = (itemId) => {
-        // Implement the update logic here
-        console.log(`Update item with ID: ${itemId}`);
-    };
-
-    const handleDelete = (itemId) => {
-        // Implement the delete logic here
-        console.log(`Delete item with ID: ${itemId}`);
-    };
-
-    const handleOptionChange = (event) => {
-        var searchValue = event.target.value;
-
-        if (searchValue == '0') {
-            getData();
-            return;
-        }
-
         var request = {
             listOfId: null,
-            type: searchValue
+            type: searchValue == '0' ? null : searchValue
         };
 
         console.log(request);
@@ -82,9 +49,27 @@ const ItemList = () => {
                 setItems(data);
                 setSum(computeSum(data));
             });
+    }
 
+    const handleView = (itemId) => {
+        // Implement the view logic here
+        console.log(`View item with ID: ${itemId}`);
+    };
 
-        setSelectedSearchOption(event.target.value);
+    const handleUpdate = (itemId) => {
+        // Implement the update logic here
+        console.log(`Update item with ID: ${itemId}`);
+    };
+
+    const handleDelete = (itemId) => {
+        // Implement the delete logic here
+        console.log(`Delete item with ID: ${itemId}`);
+    };
+
+    const handleOptionChange = (event) => {
+        var searchValue = event.target.value;
+        setSelectedSearchOption(searchValue);
+        console.log(selectedSearchOption);
     };
 
 
@@ -191,4 +176,4 @@ const ItemList = () => {
     );
 };
 
-export default ItemList;
+export default BudgetList;

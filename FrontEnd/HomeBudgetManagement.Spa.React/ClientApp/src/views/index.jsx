@@ -1,10 +1,10 @@
 import React from 'react';
-import  ItemList  from './budget/ItemList';
+import BudgetList  from './budget/BudgetList';
 
 const Home = () => {
     return (
         <p>
-            <ItemList />
+            <BudgetList />
         </p>
     )
 }
