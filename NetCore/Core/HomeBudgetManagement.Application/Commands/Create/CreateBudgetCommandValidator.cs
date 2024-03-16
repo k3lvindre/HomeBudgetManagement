@@ -9,6 +9,9 @@ namespace HomeBudgetManagement.Application.Commands
             RuleFor(obj => obj.Description).Length(1, 100).NotEmpty()
                 .WithMessage("Provides Description");
 
+            RuleFor(obj => obj.ItemType).NotNull()
+                .WithMessage("Type is required");
+
             //Other examples...
             //RuleFor(obj => obj.RequestID).Length(1, 50)
             //    .WithMessage(ResponseCode.InvalidRequestId.IdString)

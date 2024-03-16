@@ -11,8 +11,5 @@ namespace HomeBudgetManagement.Application.Commands
         public ItemType ItemType { get; set; }
         public byte[]? File { get; set; }
         public string? FileExtension { get; set; }
-        public CreateBudgetCommand()
-        {
-        }
     }
 }
