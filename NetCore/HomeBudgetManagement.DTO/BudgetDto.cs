@@ -2,7 +2,7 @@
 
 namespace HomeBudgetManagement.DTO
 {
-    public class BudgetDto
+    public record BudgetDto
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
@@ -11,7 +11,10 @@ namespace HomeBudgetManagement.DTO
         public double Amount { get; set; }
 
         [JsonPropertyName("description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
+
+        [JsonPropertyName("type")]
+        public string Type { get; set; } 
 
         [JsonPropertyName("date")]
         public DateTime Date { get; set; }
