@@ -20,70 +20,44 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     //Its purpose is to declare that the controller's actions support a response content type of application/json:
     [Produces("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class BudgetController : ControllerBase
+    public class BudgetController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public BudgetController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        private readonly IMediator _mediator = mediator;
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var query = new GetExpenseQuery();
-
-            var result = await _mediator.Send(query);
-            if (result is not null && result.Any())
-            {
-                return Ok(result);
-            }
-
-            else return NotFound();
+            var result = await _mediator.Send(new GetExpenseQuery());
+            return result is not null && result.Any() ? Ok(result) : NotFound();
         }
 
         [HttpPost("search")]
         public async Task<IActionResult> Search(GetBudgetQueryRequestDto getExpenseQueryRequestDto)
         {
-            var query = new GetExpenseQuery()
+            var result = await _mediator.Send(new GetExpenseQuery()
             {
                 ListOfId = getExpenseQueryRequestDto?.ListOfId,
-                Type =(ItemType?)getExpenseQueryRequestDto?.Type
-            };
+                Type = (ItemType?)getExpenseQueryRequestDto?.Type
+            });
 
-            var result = await _mediator.Send(query);
-            if (result is not null && result.Any())
-            {
-                return Ok(result);
-            }
-
-            else return NotFound();
+            return result is not null && result.Any() ? Ok(result) : NotFound();
         }
+        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _mediator.Send(new GetExpenseQuery()
+            {
+                ListOfId = [id]
+            });
 
-        //[HttpGet]
-        //[Authorize(Policy = "NickNamePolicy")]
-        //public async Task<IActionResult> GetExpenses()
-        //{
-        //    var query = new GetExpenseQuery()
-        //    {
-        //        ExpenseIds = request.ExpenseIds
-        //    };
-
-        //    var result = await _mediator.Send(query);
-
-        //    if (result.Any())
-        //    {
-        //        return Ok(result);
-        //    }
-        //    else return NotFound();
-        //}
+            return result is not null && result.Any() ? Ok(result.First()) : NotFound();
+        }
 
         //Adding triple-slash comments to an action enhances the Swagger UI by adding the description to the section header.
         //Add a<remarks> element to the Create action method documentation.
         //It supplements information specified in the<summary> element and provides a more robust Swagger UI.
         //The<remarks> element content can consist of text, JSON, or XML.
-
         /// <summary>
         /// Creates a expense.
         /// </summary>
@@ -103,9 +77,14 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        //ProducesResponseType - This attribute is used by tools like Swagger/OpenAPI to generate accurate API documentation
+        //The first parameter is the type of the expected response(e.g., the return type of the action).
+        //The optional second parameter is the HTTP status code associated with the response.
+        [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> AddExpense(CreateBudgetRequestDto expense)
+        //other example is:
+        //[ProducesResponseType(typeof(ErrorResponse), 400)]
+        public async Task<IActionResult> Create(CreateBudgetRequestDto expense)
         {
             var command = new CreateBudgetCommand()
             {
@@ -117,50 +96,64 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             };
 
             var result = await _mediator.Send(command);
-            if (result.IsCreated)
-            {
-                return CreatedAtAction(nameof(AddExpense), result.Id);
-            }
-            else return BadRequest();
+            return result.IsCreated ? CreatedAtAction(nameof(Create), result.Id) : BadRequest();
         }
 
-        //[HttpPut]
-        //public async Task<IActionResult> UpdateExpense(CreatePayoutRequestDto expense)
-        //{
-        //    //Account account =  _accountRepository.GetAccountAsync();
-        //    //if (account.Balance >= expense.Amount)
-        //    //{
-        //    //_unitOfWork.Expenses.Update(expense);
-        //    //var result = await _unitOfWork.SaveChangesAsync();
-        //    var command = new CreateExpenseCommand(expense.De)
+        [HttpPut]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Update(UpdateBudgetRequestDto requestDto)
+        {
+            var command = new UpdateBudgetCommand()
+            {
+                Id = requestDto.Id,
+                Description = requestDto.Description,
+                Amount = requestDto.Amount,
+                ItemType = (ItemType)requestDto.Type
+            };
 
-        //    var result = _mediator.Send();
-        //        if (result > 0)
-        //        {
-        //            return Ok();
-        //        }
-        //        else return BadRequest();
-        //    //} 
-        //    //else return BadRequest("Insuficient Balance!");
-        //}
+            var result = await _mediator.Send(command);
+            return result ? Ok(result) : BadRequest();
+        }
 
         /// <summary>
-        /// Deletes a specific Expense.
+        /// Deletes a specific budget using Id.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
-        //[HttpDelete("{id:int}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var item = await _unitOfWork.Expenses.GetByIdAsync(id);
-        //    _unitOfWork.Expenses.Delete(item);
-        //    var result =  await _unitOfWork.SaveChangesAsync();
+        /// <returns>boolean</returns>
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _mediator.Send(new DeleteBudgetCommand()
+            {
+                Id = id
+            });
 
-        //    if (result > 0)
+            return result ? Ok(result) : BadRequest();
+        }
+
+        #region Other useful example
+        //1. Using authorization policy
+        //2. Returning file
+
+        //[HttpGet]
+        //[Authorize(Policy = "NickNamePolicy")]
+        //public async Task<IActionResult> GetExpenses()
+        //{
+        //    var query = new GetExpenseQuery()
         //    {
-        //        return Ok();
+        //        ExpenseIds = request.ExpenseIds
+        //    };
+
+        //    var result = await _mediator.Send(query);
+
+        //    if (result.Any())
+        //    {
+        //        return Ok(result);
         //    }
-        //    else return BadRequest();
+        //    else return NotFound();
         //}
 
 
@@ -182,5 +175,6 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         //    }
         //    return BadRequest();
         //}
+        #endregion
     }
 }
