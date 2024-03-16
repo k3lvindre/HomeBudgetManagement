@@ -2,27 +2,20 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
     [ApiController]
     [Route("api/v1/identity")]
-    public class IdentityController : Controller
+    public class IdentityController(
+        UserManager<IdentityUser> userManager, 
+        SignInManager<IdentityUser> signinManager,
+        IAuthService authService) : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signinManager;
-        private readonly IAuthService _authService;
-
-        public IdentityController(UserManager<IdentityUser> userManager
-            , SignInManager<IdentityUser> signinManager
-            , IAuthService authService)
-        {
-            _userManager = userManager;
-            _signinManager = signinManager;
-            _authService = authService;
-        }
+        private readonly UserManager<IdentityUser> _userManager = userManager;
+        private readonly SignInManager<IdentityUser> _signinManager = signinManager;
+        private readonly IAuthService _authService = authService;
 
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserAccount user)
@@ -30,11 +23,9 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             if(ModelState.IsValid)
             {
                 var result = await _userManager.CreateAsync(new IdentityUser(user.UserName), user.Password);
-                if(result.Succeeded)
-                {
-                    return Accepted();
-                }
+                if(result.Succeeded) return Accepted();
             }
+
             return BadRequest();
         }
 
@@ -42,14 +33,12 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpGet("{username}")]
         public async Task<IActionResult> GetUser(string username)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var result = await _userManager.FindByNameAsync(username);
-                if(result is not null)
-                {
-                    return Ok(result.UserName);
-                }
+                if (result is not null) Ok(result.UserName);
             }
+
             return NotFound();
         }
           
@@ -63,18 +52,12 @@ namespace HomeBudgetManagement.Api.Core.Controllers
                 if (user is null) return NotFound();
 
                 var result = await _signinManager.PasswordSignInAsync(user,  account.Password, false, false);
-                if(result.Succeeded)
-                {
-                    return Ok(_authService.GenerateToken(user));
-                }
+                if(result.Succeeded)  return Ok(_authService.GenerateToken(user));
             }
+
             return NotFound();
         }
 
-        public class UserAccount
-        {
-            public string UserName { get; set; }
-            public string Password { get; set; }
-        }
+        public record UserAccount(string UserName, string Password);
     }
 }

@@ -5,20 +5,12 @@ using System.Threading.Tasks;
 namespace HomeBudgetManagement.Api.Core.Controllers
 {
     [Route("api/eventfeeds")]
-    public class EventFeedController : Controller
+    public class EventFeedController(IEventFeed eventFeed) : Controller
     {
-        private readonly IEventFeed _eventFeed;
-
-        public EventFeedController(IEventFeed eventFeed)
-        {
-            _eventFeed = eventFeed;
-        }
+        private readonly IEventFeed _eventFeed = eventFeed;
 
         [HttpGet("name/{name}")]
         public async Task<IActionResult> GetEventByName(string name)
-        {
-            var result = await _eventFeed.GetByNameAsync(name);
-            return Ok(result);
-        }
+            => Ok(await _eventFeed.GetByNameAsync(name));
     }
 }
