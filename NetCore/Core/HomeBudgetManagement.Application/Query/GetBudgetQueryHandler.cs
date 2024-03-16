@@ -16,6 +16,8 @@ namespace HomeBudgetManagement.Application.Query
 
         public async Task<IEnumerable<BudgetDto>> Handle(GetExpenseQuery query, CancellationToken cancellationToken)
         {
+            //Tech debt: get filtered items instead of getting all items
+            //Tech debt: add automapper for dto
             var result = await _budgetRepository.GetAllAsync();
 
             if (query.ListOfId is not null)
@@ -39,6 +41,7 @@ namespace HomeBudgetManagement.Application.Query
                 Amount = budget.Amount, 
                 Description = budget.Description,
                 Date = budget.CreatedDate,
+                Type = Enum.GetName<ItemType>(budget.ItemType)!,
                 Id = budget.Id
             };
     }
