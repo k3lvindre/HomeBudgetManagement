@@ -1,7 +1,7 @@
 // DropdownComponent.jsx
 import React from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
-import ItemTypes from '../../common/ItemTypes'; // Import your enum
+import ItemTypes from '../../common/itemTypes'; // Import your enum
 
 const DropdownComponent = ({ selectedType, onSelect }) => {
     var getKeyByValue = (object, value) => Object.keys(object).find(key => object[key] == value);

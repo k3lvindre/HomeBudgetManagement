@@ -6,7 +6,7 @@ import './App.css'
 import React from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Home from './views/index';
-import CreateBudgetForm from './views/budget/Create';
+import BudgetForm from './views/budget/budget';
 import Nav from './Nav';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
         
            <Routes>
                <Route exact path="/"  element={<Home />} />
-                <Route path="/budget/create" element={<CreateBudgetForm />} />
+                <Route path="/budget/budget" element={<BudgetForm />} />
            </Routes>
         </div>
     );

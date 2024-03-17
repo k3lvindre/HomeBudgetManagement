@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { deleteBudget, search} from '../../utils/budgetApi'; 
 
 const BudgetList = () => {
-    var token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3VzZXJkYXRhIjoia2VsdmluMiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkFkbWluIiwiTmlja05hbWUiOiJrZWx2IiwiZXhwIjoxNzA4Mzk4NzczLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAifQ.Wq5Lyn7xY4CU4sq1Wv_uisQ0w1J349Q2v1RLeDDzF0tRWviW3R-mf8sQoh6dfXrjifde0o5S2Dha1rzAJy3Jzg";
-
     const [items, setItems] = useState([]);
     const [sum, setSum] = useState(0);
     const [selectedSearchOption, setSelectedSearchOption] = useState('0');
@@ -14,65 +13,58 @@ const BudgetList = () => {
     //In summary, componentDidMount is used in class components, and useEffect is used in functional components to achieve similar effects.
     useEffect(() =>
     {
-        getData(selectedSearchOption);
+        loadData(selectedSearchOption);
     }, [selectedSearchOption]); //in 2nd argument you can pass any value here(e.g selectedSearchOption) that if it changed it will rerun all the logic inside this so like tracking value changes then updates.
 
-    var getData = (searchValue) => {
+    const loadData = (searchValue) => {
         // Fetch data from your API endpoint
         var request = {
             listOfId: null,
             type: searchValue == '0' ? null : searchValue
         };
 
-        console.log(request);
-
-        // Fetch data from your API endpoint
-        fetch('http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/budget/search',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(request),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.log(`HTTP error! Status: ${response.status}`);
-                    setItems([]);
-                    setSum(0);
-                    return;
-                }
-                return response.json(); // Assuming the response is in JSON format
-            })
-            .then((data) => {
+        search(request).then((data) => {
+            if (data) {
                 setItems(data);
                 setSum(computeSum(data));
-            });
+            } else {
+                setItems([]);
+                setSum(0);
+            }
+        });
     }
 
     const handleView = (itemId) => {
         // Implement the view logic here
         console.log(`View item with ID: ${itemId}`);
-    };
 
-    const handleUpdate = (itemId) => {
-        // Implement the update logic here
-        console.log(`Update item with ID: ${itemId}`);
+        // Get the base URL
+        var baseUrl = window.location.origin;
+
+        // Specify the path for the new page
+        var newPath = `/budget/budget?id=` + itemId;
+
+        // Construct the new URL by combining the base URL and the new path
+        var newUrl = baseUrl + newPath;
+
+        // Redirect to the new URL
+        window.location.href = newUrl;
     };
 
     const handleDelete = (itemId) => {
-        // Implement the delete logic here
-        console.log(`Delete item with ID: ${itemId}`);
+        deleteBudget(itemId).then(() => {
+            loadData('0');
+        });
     };
 
     const handleOptionChange = (event) => {
         var searchValue = event.target.value;
         setSelectedSearchOption(searchValue);
-        console.log(selectedSearchOption);
     };
 
-
+    //.map() - Maps over each item in the list and extracts the amount property from each item.
+    //It transforms the original array of objects into an array of amounts.
+    //
     var computeSum = (list) => list.map(item => item.amount).reduce((acc, currentValue) => acc + currentValue, 0);
 
     const inlineStyle = {
@@ -154,6 +146,7 @@ const BudgetList = () => {
                         <th>Id</th>
                         <th>Description</th>
                         <th>Amount</th>
+                        <th>Type</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -163,9 +156,9 @@ const BudgetList = () => {
                             <td>{item.id}</td>
                             <td>{item.description}</td>
                             <td>{item.amount}</td>
+                            <td>{item.type}</td>
                             <td>
                                 <button className="btn btn-info mr-2" onClick={() => handleView(item.id)}>View</button>
-                                <button className="btn btn-warning mr-2" onClick={() => handleUpdate(item.id)}>Edit</button>
                                 <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
                             </td>
                         </tr>
