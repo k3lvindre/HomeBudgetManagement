@@ -53,6 +53,7 @@ builder.Services.AddAuthentication(options =>
 ////Call some service to get records
 //return View();
 //} 
+
 builder.Services.AddCors();
 
 var app = builder.Build();
@@ -63,11 +64,31 @@ var app = builder.Build();
 //app.UseCors(policyBuilder => policyBuilder.WithHeaders("accept,contenttype").AllowAnyOrigin().WithMethods("GET, POST"));
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+app.UseHealthChecks("/health");
+
 //add ocelot middleware
 await app.UseOcelot();
-app.UseHealthChecks("/health");
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.MapGet("/", () => "Hello World!");
+
+//Different between these two Run is:
+//1. Adding terminal middleware
+//app.Run(async context =>
+//{
+//    // Handle requests for specific paths
+//    if (context.Request.Path == "/special")
+//    {
+//        await context.Response.WriteAsync("Special endpoint");
+//    }
+//});
+
+//app.Run(async context =>
+//{
+//    // Default handler for requests not handled by other middleware
+//    context.Response.StatusCode = 404;
+//    await context.Response.WriteAsync("Resource not found");
+//});
+
+//2. Actually running the server
 app.Run();
