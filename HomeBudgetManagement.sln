@@ -53,7 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C4 Model", "C4 Model", "{C1
 		Diagram\C4 Model\Home Budget Management Architecture Diagram.drawio = Diagram\C4 Model\Home Budget Management Architecture Diagram.drawio
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeBudgetManagement.SharedKernel", "NetCore\HomeBudgetManagement.SharedKernel\HomeBudgetManagement.SharedKernel.csproj", "{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HomeBudgetManagement.SharedKernel", "NetCore\HomeBudgetManagement.SharedKernel\HomeBudgetManagement.SharedKernel.csproj", "{CBEA8F09-3986-48F4-A1A9-B6E6E7EED5CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
