@@ -3,11 +3,11 @@ using Autofac.Extensions.DependencyInjection;
 using HomeBudgetManagement.Api.Core.Services;
 using HomeBudgetManagement.Api.Core.Services.CustomAuthorization;
 using HomeBudgetManagement.API.Core.Infrastructure;
-using HomeBudgetManagement.Application.Behaviors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -21,18 +21,13 @@ using System.Text;
 
 namespace HomeBudgetManagement.Api.Core
 {
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
 
         // If, for some reason, you need a reference to the built container, you
         // can use the convenience extension method GetAutofacRoot.
         public ILifetimeScope AutofacContainer { get; private set; }
-
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
 
 
 
@@ -229,8 +224,12 @@ namespace HomeBudgetManagement.Api.Core
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGet("/hello", async c =>
+                {
+                    c.Response.StatusCode = StatusCodes.Status200OK;
+                    await c.Response.WriteAsync("hello");
+                });
             });
-            
         }
     }
 }
