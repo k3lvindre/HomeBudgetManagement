@@ -41,6 +41,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetFramework", "NetFramework", "{22CCCFEC-6614-4B30-B75A-83AE58B073CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetCore", "NetCore", "{C6C3B562-15E0-4056-A93D-CD8370D5B7E8}"
+	ProjectSection(SolutionItems) = preProject
+		NetCore\Dockerfile = NetCore\Dockerfile
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrontEnd", "FrontEnd", "{987D7530-8024-4032-AA15-643353C98140}"
 EndProject
