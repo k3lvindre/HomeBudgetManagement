@@ -10,6 +10,11 @@ EXPOSE 5000
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["HomeBudgetManagement.Api.Core/HomeBudgetManagement.Api.Core.csproj", "HomeBudgetManagement.Api.Core/"]
+COPY ["Core/HomeBudgetManagement.Application/HomeBudgetManagement.Application.csproj", "HomeBudgetManagement.Application/"]
+COPY ["Core/HomeBudgetManagement.Core/HomeBudgetManagement.Core.csproj", "HomeBudgetManagement.Core/"]
+COPY ["HomeBudgetManagement.DTO/HomeBudgetManagement.DTO.csproj", "HomeBudgetManagement.DTO/"]
+COPY ["HomeBudgetManagement.Infrastructure/HomeBudgetManagement.Infrastructure.csproj", "HomeBudgetManagement.Infrastructure/"]
+RUN dotnet restore "HomeBudgetManagement.Api.Core/HomeBudgetManagement.Api.Core.csproj"
 WORKDIR "/src"
 COPY . .
 RUN dotnet build "HomeBudgetManagement.Api.Core/HomeBudgetManagement.Api.Core.csproj" -c Release -o /app/build
