@@ -2,12 +2,14 @@ import { getCookie } from './cookieManager';
 import { signIn } from './authApi'; 
 
 const baseUrl = "http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/budget/";
-const token = await auth();
-
 const auth = async () => {
     await signIn("kelvin2", "P@ssword12345");
     return getCookie('token');
 }
+
+const token = await auth();
+
+
 
 export const getById = async (id) => {
     try
