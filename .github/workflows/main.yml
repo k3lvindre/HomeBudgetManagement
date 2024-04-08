@@ -1,6 +1,6 @@
 name: Build and Deploy ASP .NET Core Chapter 12 to GitHub Pages
 on:
-  # trigger the workflow only when a push happens in Chapter 12
+  # trigger the workflow only when a push happens in api core
   push:
     branches: [ master ]
     paths:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: apiCore
-          path: ./NetCore/HomeBudgetManagement.Api.Corebin/Release/net8.0/publish’
+          path: ./NetCore/HomeBudgetManagement.Api.Corebin/Release/net8.0/publish
   deploy:
     needs: build
     runs-on: ubuntu-latest
