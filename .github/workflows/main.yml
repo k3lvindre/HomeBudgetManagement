@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
-    - ‘.\HomeBudgetManagement\NetCore\HomeBudgetManagement.Api.Core\**’
+    - ./NetCore/HomeBudgetManagement.Api.Core/**
 jobs:
   build:
     runs-on: ubuntu-latest
