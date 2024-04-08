@@ -1,0 +1,50 @@
+name: Build and Deploy ASP .NET Core Chapter 12 to GitHub Pages
+on:
+  # trigger the workflow only when a push happens in Chapter 12
+  push:
+    branches: [ master ]
+    paths:
+    - ‘HomeBudgetManagement\NetCore\HomeBudgetManagement.Api.Core\**’
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # steps to build the application
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ‘8.0’
+      - name: Publish app
+        run: dotnet publish -c Release ‘.\HomeBudgetManagement\NetCore\HomeBudgetManagement.Api.Core\HomeBudgetManagement.Api.Core.csproj’
+      - name: Save artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: apiCore
+          path: ‘.\HomeBudgetManagement\NetCore\HomeBudgetManagement.Api.Corebin\Release\net8.0\publish’
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # steps to deploy the application
+      - uses: actions/checkout@v2
+      - name: Create release branch
+        continue-on-error: true
+        run: |
+          git config --global user.name “K3lvindre”
+          git config --global user.email “K3lvindre@gmail.com”
+          git checkout -B release
+      - name: Clear release branch
+        continue-on-error: true
+        run: |
+          git rm -rf .
+          git commit --allow-empty -m “root commit”
+          git push -f origin release
+      - name: Download build artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: apiCore
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m “publishing apicore”
+          git push --set-upstream origin release
