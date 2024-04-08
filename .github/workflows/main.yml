@@ -3,8 +3,6 @@ on:
   # trigger the workflow only when a push happens in api core
   push:
     branches: [ master ]
-    paths:
-    - './NetCore/HomeBudgetManagement.Api.Core/**'
 jobs:
   build:
     runs-on: ubuntu-latest
