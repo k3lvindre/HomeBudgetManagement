@@ -26,13 +26,13 @@ jobs:
       # steps to deploy the application
       - uses: actions/checkout@v2
       - name: Create release branch
-        continue-on-error: true
+        continue-on-error: false
         run: |
           git config --global user.name “K3lvindre”
           git config --global user.email “K3lvindre@gmail.com”
           git checkout -B release
       - name: Clear release branch
-        continue-on-error: true
+        continue-on-error: false
         run: |
           git rm -rf .
           git commit --allow-empty -m “root commit”
