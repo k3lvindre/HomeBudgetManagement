@@ -1,5 +1,5 @@
 import React from 'react';
-import BudgetList  from './budget/BudgetList';
+import BudgetList  from './budget/budgetList';
 
 const Home = () => {
     return (

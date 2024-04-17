@@ -2,18 +2,17 @@ import { getCookie } from './cookieManager';
 import { signIn } from './authApi'; 
 
 const baseUrl = "http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/budget/";
-const auth = async () => {
-    await signIn("kelvin2", "P@ssword12345");
+
+var getToken = async () => {
+    var token = getCookie('token');
+    if (token == null) await signIn("kelvin2", "P@ssword12345");
     return getCookie('token');
 }
-
-const token = await auth();
-
-
 
 export const getById = async (id) => {
     try
     {
+        var token = await getToken();
         const response = await fetch(baseUrl + id, {
             method: 'GET',
             headers: {
@@ -50,6 +49,8 @@ export const getById = async (id) => {
 
 export const postBudget = async (request) => {
     try {
+        var token = await getToken();
+
         const response = await fetch(baseUrl, {
             method: request.id == null ? 'POST' : 'PUT',
             headers: {
@@ -69,8 +70,9 @@ export const postBudget = async (request) => {
     }
 }
 
-export const search = (request) => {
+export const search = async (request) => {
     console.log(request);
+    var token = await getToken();
 
     // Fetch data from your API endpoint
     //Here we dont use await because we want to other task unlike in other method which the response needs to await so it can be read
@@ -96,10 +98,12 @@ export const search = (request) => {
         });
 }
 
-export const deleteBudget = (itemId) => {
+export const deleteBudget = async (itemId) => {
 
     // Implement the delete logic here
     console.log(`Delete item with ID: ${itemId}`);
+
+    var token = await getToken();
 
     // Fetch data from your API endpoint
     return fetch(baseUrl + itemId,

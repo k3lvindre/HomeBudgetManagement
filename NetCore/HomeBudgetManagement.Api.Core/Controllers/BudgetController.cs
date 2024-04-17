@@ -37,7 +37,9 @@ namespace HomeBudgetManagement.Api.Core.Controllers
             var result = await _mediator.Send(new GetExpenseQuery()
             {
                 ListOfId = getExpenseQueryRequestDto?.ListOfId,
-                Type = (ItemType?)getExpenseQueryRequestDto?.Type
+                Type = (ItemType?)getExpenseQueryRequestDto?.Type,
+                DateFrom = getExpenseQueryRequestDto.DateFrom,
+                DateTo = getExpenseQueryRequestDto.DateTo
             });
 
             return result is not null && result.Any() ? Ok(result) : NotFound();

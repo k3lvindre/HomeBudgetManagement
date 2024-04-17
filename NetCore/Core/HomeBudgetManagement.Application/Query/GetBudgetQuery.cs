@@ -8,5 +8,7 @@ namespace HomeBudgetManagement.Application.Query
     {
         public List<int>? ListOfId { get; set; }
         public ItemType? Type { get; set; }
+        public string? DateFrom { get; set; }
+        public string? DateTo { get; set; }
     }
 }

@@ -4,7 +4,8 @@ import { deleteBudget, search} from '../../utils/budgetApi';
 const BudgetList = () => {
     const [items, setItems] = useState([]);
     const [sum, setSum] = useState(0);
-    const [selectedSearchOption, setSelectedSearchOption] = useState('0');
+    const [dateRange, setDateRange] = useState({dateFrom: '', dateTo: ''});
+    const [selectedItemType, setSelectedItemType] = useState('0');
 
     //useEffect takes a function as its first argument, and the second argument is an array of dependencies. 
     //If the dependency array is empty([]), the effect will run only once after the initial render, 
@@ -13,17 +14,19 @@ const BudgetList = () => {
     //In summary, componentDidMount is used in class components, and useEffect is used in functional components to achieve similar effects.
     useEffect(() =>
     {
-        loadData(selectedSearchOption);
-    }, [selectedSearchOption]); //in 2nd argument you can pass any value here(e.g selectedSearchOption) that if it changed it will rerun all the logic inside this so like tracking value changes then updates.
+        loadData();
+    },[]); //in 2nd argument you can pass any value here(e.g selectedItemType) that if it changed it will rerun all the logic inside this so like tracking value changes then updates.
 
-    const loadData = (searchValue) => {
+    const loadData = async () => {
         // Fetch data from your API endpoint
         var request = {
             listOfId: null,
-            type: searchValue == '0' ? null : searchValue
+            type: selectedItemType == '0' ? null : selectedItemType,
+            dateFrom: dateRange.dateFrom,
+            dateTo: dateRange.dateTo,
         };
 
-        search(request).then((data) => {
+        await search(request).then((data) => {
             if (data) {
                 setItems(data);
                 setSum(computeSum(data));
@@ -51,15 +54,25 @@ const BudgetList = () => {
         window.location.href = newUrl;
     };
 
-    const handleDelete = (itemId) => {
-        deleteBudget(itemId).then(() => {
-            loadData('0');
+    const handleDelete = async (itemId) => {
+        await deleteBudget(itemId).then(async () => {
+            await loadData('0');
         });
     };
 
     const handleOptionChange = (event) => {
-        var searchValue = event.target.value;
-        setSelectedSearchOption(searchValue);
+        var itemType = event.target.value;
+        setSelectedItemType(itemType);
+    };
+
+    const handleDateChange = (event) => {
+        const { name, value } = event.target;
+        dateRange[name] = value;
+        setDateRange(dateRange);
+    };
+
+    const handleSearch = async (event) => {
+        await loadData();
     };
 
     //.map() - Maps over each item in the list and extracts the amount property from each item.
@@ -74,53 +87,53 @@ const BudgetList = () => {
 
     return (
         <div className="container mt-5">
-            <div class="row">
+            <div className="row">
                 <p>Filter by:</p>
 
                 <div className="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label className={`btn btn-outline-primary ${selectedSearchOption === '0' ? 'active' : ''}`}>
+                    <label className={`btn btn-outline-primary ${selectedItemType === '0' ? 'active' : ''}`}>
                         <input
                             type="radio"
-                            name="radioOptions"
-                            id="searchOption"
+                            name="itemTypeOptions"
+                            id="itemType"
                             value="0"
-                            checked={selectedSearchOption === '0'}
+                            checked={selectedItemType === '0'}
                             onChange={handleOptionChange}
                         />
                         All
                     </label>
 
-                    <label className={`btn btn-outline-primary ${selectedSearchOption === '1' ? 'active' : ''}`}>
+                    <label className={`btn btn-outline-primary ${selectedItemType === '1' ? 'active' : ''}`}>
                         <input
                             type="radio"
-                            name="radioOptions"
-                            id="searchOption"
+                            name="itemTypeOptions"
+                            id="itemType"
                             value="1"
-                            checked={selectedSearchOption === '1'}
+                            checked={selectedItemType === '1'}
                             onChange={handleOptionChange}
                         />
                         Expense
                     </label>
 
-                    <label className={`btn btn-outline-primary ${selectedSearchOption === '2' ? 'active' : ''}`}>
+                    <label className={`btn btn-outline-primary ${selectedItemType === '2' ? 'active' : ''}`}>
                         <input
                             type="radio"
-                            name="radioOptions"
-                            id="searchOption"
+                            name="itemTypeOptions"
+                            id="itemType"
                             value="2"
-                            checked={selectedSearchOption === '2'}
+                            checked={selectedItemType === '2'}
                             onChange={handleOptionChange}
                         />
                         Income
                     </label>
 
-                    <label className={`btn btn-outline-primary ${selectedSearchOption === '3' ? 'active' : ''}`}>
+                    <label className={`btn btn-outline-primary ${selectedItemType === '3' ? 'active' : ''}`}>
                         <input
                             type="radio"
-                            name="radioOptions"
-                            id="searchOption"
+                            name="itemTypeOptions"
+                            id="itemType"
                             value="3"
-                            checked={selectedSearchOption === '3'}
+                            checked={selectedItemType === '3'}
                             onChange={handleOptionChange}
                         />
                         Savings
@@ -128,14 +141,39 @@ const BudgetList = () => {
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4">
+            <div className="row">
+                <label>Date Range:</label>
+                <div className="input-group">
+                    <input
+                        type="date"
+                        className="form-control"
+                        onChange={handleDateChange}
+                        placeholder="From"
+                        name="dateFrom"
+                    />
+                    <input
+                        type="date"
+                        className="form-control"
+                        onChange={handleDateChange}
+                        placeholder="To"
+                        name="dateTo"
+                    />
+                    <div className="input-group-append">
+                        <button className="btn btn-outline-secondary" type="button" onClick={handleSearch}>
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-md-4">
                     <p style={inlineStyle}>Items</p>
                 </div>
-                <div class="col-md-4">
+                <div className="col-md-4">
                     <p>Total:{items?.length??0}</p>
                 </div>
-                <div class="col-md-4">
+                <div className="col-md-4">
                     <p>Sum:{sum}</p>
                 </div>
             </div>
@@ -144,6 +182,7 @@ const BudgetList = () => {
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>Date</th>
                         <th>Description</th>
                         <th>Amount</th>
                         <th>Type</th>
@@ -154,6 +193,7 @@ const BudgetList = () => {
                     {items?.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
+                            <td>{new Date(item.date).toLocaleDateString()}</td>
                             <td>{item.description}</td>
                             <td>{item.amount}</td>
                             <td>{item.type}</td>

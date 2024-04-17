@@ -9,5 +9,11 @@ namespace HomeBudgetManagement.DTO
 
         [DataMember(Name = "type")]
         public int? Type { get; set; }
+
+        [DataMember(Name = "dateFrom")]
+        public string? DateFrom { get; set; }
+
+        [DataMember(Name = "dateTo")]
+        public string? DateTo { get; set; }
     }
 }
