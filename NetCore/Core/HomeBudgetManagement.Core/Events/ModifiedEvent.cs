@@ -1,15 +1,9 @@
-﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
-using MediatR;
+﻿using MediatR;
 
 namespace HomeBudgetManagement.Core.Events
 {
-    public class ModifiedEvent<T> : INotification
+    public class ModifiedEvent<T>(T entity) : INotification
     {
-        public T Entity { get; }
-
-        public ModifiedEvent(T entity)
-        {
-            Entity = entity;
-        }
+        public T Entity { get; } = entity;
     }
 }

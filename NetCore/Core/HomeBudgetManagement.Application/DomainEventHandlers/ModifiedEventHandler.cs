@@ -7,14 +7,9 @@ namespace HomeBudgetManagement.Application.DomainEventHandlers
     //you can also use event bus here to publish events for mircorservice in case you have one.
     //that is called integration events
     //but the example here is called domain events
-    public class ModifiedEventHandler<T> : INotificationHandler<ModifiedEvent<T>>
+    public class ModifiedEventHandler<T>(IEventFeed eventFeed) : INotificationHandler<ModifiedEvent<T>>
     {
-        private readonly IEventFeed _eventFeed;
-
-        public ModifiedEventHandler(IEventFeed eventFeed)
-        {
-            _eventFeed = eventFeed;
-        }
+        private readonly IEventFeed _eventFeed = eventFeed;
 
         public async Task Handle(ModifiedEvent<T> notification, CancellationToken cancellationToken)
         {

@@ -11,7 +11,7 @@ namespace HomeBudgetManagement.DTO
         public double Amount { get; set; }
 
         [JsonPropertyName("description")]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
 
         [JsonPropertyName("type")]
         public string Type { get; set; } 
