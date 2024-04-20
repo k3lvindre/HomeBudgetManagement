@@ -221,6 +221,8 @@ namespace HomeBudgetManagement.Api.Core
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseWebSockets();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

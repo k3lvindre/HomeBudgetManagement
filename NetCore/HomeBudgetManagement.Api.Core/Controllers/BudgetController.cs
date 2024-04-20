@@ -7,7 +7,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 //test github actionssssss
 
@@ -23,7 +29,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     public class BudgetController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
-
+        static List<WebSocket> _webSocketConnections = new List<WebSocket>();
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -178,5 +184,45 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         //    return BadRequest();
         //}
         #endregion
+
+        //Web Sockets Example
+        [Route("/ws")]
+        public async Task WebSocketAction()
+        {
+            if (HttpContext.WebSockets.IsWebSocketRequest)
+            {
+                using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+                _webSocketConnections.Add(webSocket);
+               
+                while(webSocket.State == WebSocketState.Open)
+                {
+                    var buffer = new byte[1024 * 4];
+                    var receiveResult = await webSocket.ReceiveAsync(
+                        new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                    if (receiveResult.MessageType == WebSocketMessageType.Close) break;
+
+                    var message2 = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
+                    message2 = $"Server received:{message2}";
+                    var bytes2 = Encoding.UTF8.GetBytes(message2);
+                    var arraySegment2 = new ArraySegment<byte>(bytes2, 0, bytes2.Length);
+
+                    foreach (var item in _webSocketConnections)
+                    {
+                        if(item.State == WebSocketState.Open)
+                            await item.SendAsync(arraySegment2,
+                              WebSocketMessageType.Text,
+                              true,
+                              CancellationToken.None);
+                    }
+                }
+
+                _webSocketConnections.Remove(webSocket);
+            }
+            else
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            }
+        }
     }
 }
