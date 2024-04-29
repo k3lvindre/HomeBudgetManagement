@@ -4,6 +4,8 @@ function WebSocketPage() {
     const [messages, setMessages] = useState([]);
     const [websocket, setWebsocket] = useState(null);
     const [message, setMessage] = useState('');
+    const [receivedData, setReceivedData] = useState([]);
+    const [fileName, setFileName] = useState(''); // Default file name
 
     useEffect(() => {
         // Create WebSocket connection.
@@ -18,6 +20,19 @@ function WebSocketPage() {
         ws.onmessage = (event) => {
             console.log('Message from server ', event.data);
             setMessages(prev => [...prev, event.data]);
+
+            if (typeof event.data === "string") {
+                //setFileName(event.data);
+                setFileName("x.jpg");
+            } else {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    setReceivedData(reader.result);
+                };
+                reader.readAsArrayBuffer(event.data);
+            }
+
+            handleDownload();
         };
 
         // Listen for possible errors
@@ -47,6 +62,17 @@ function WebSocketPage() {
     const sendMessage = () => {
         websocket.send(message);
     }
+
+    // Function to handle download
+    const handleDownload = () => {
+        const element = document.createElement("a");
+        const file = new Blob([receivedData], { type: 'application/octet-stream' });
+        element.href = URL.createObjectURL(file);
+        element.download = fileName;
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+        document.body.removeChild(element);
+    };
 
     return (
         <div>
