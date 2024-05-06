@@ -4,8 +4,8 @@ function WebSocketPage() {
     const [messages, setMessages] = useState([]);
     const [websocket, setWebsocket] = useState(null);
     const [message, setMessage] = useState('');
-    const [receivedData, setReceivedData] = useState([]);
-    const [fileName, setFileName] = useState(''); // Default file name
+    const [receivedBytes, setReceivedBytes] = useState([]);
+    const [fileName, setFileName] = useState('image.jpg'); // Default file name
 
     useEffect(() => {
         // Create WebSocket connection.
@@ -19,20 +19,14 @@ function WebSocketPage() {
         // Listen for messages
         ws.onmessage = (event) => {
             console.log('Message from server ', event.data);
-            setMessages(prev => [...prev, event.data]);
 
             if (typeof event.data === "string") {
-                //setFileName(event.data);
-                setFileName("x.jpg");
-            } else {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    setReceivedData(reader.result);
-                };
-                reader.readAsArrayBuffer(event.data);
-            }
-
-            handleDownload();
+                setMessages(prev => [...prev, event.data]);
+            } else if (event.data instanceof Blob) {
+                // Assuming the whole file is sent in one chunk
+                setFileName("something.jpg");
+                setReceivedBytes(event.data);
+            } 
         };
 
         // Listen for possible errors
@@ -54,6 +48,10 @@ function WebSocketPage() {
         };
     }, []);
 
+    useEffect(() => {
+        if (receivedBytes.size > 0) handleDownload(receivedBytes);
+    }, [receivedBytes])
+
     const handleMessageChange = (event) => {
         const { name, value } = event.target;
         setMessage(value);
@@ -64,14 +62,17 @@ function WebSocketPage() {
     }
 
     // Function to handle download
-    const handleDownload = () => {
-        const element = document.createElement("a");
-        const file = new Blob([receivedData], { type: 'application/octet-stream' });
-        element.href = URL.createObjectURL(file);
-        element.download = fileName;
-        document.body.appendChild(element); // Required for this to work in FireFox
-        element.click();
-        document.body.removeChild(element);
+    const handleDownload = (bytes) => {
+        const blob = new Blob([bytes], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const list = document.createElement('li');
+        a.href = url;
+        a.download = fileName;
+        a.innerText = "Download File";
+        list.appendChild(a);
+        var element = document.getElementById('file');
+        element.appendChild(list);
     };
 
     return (
@@ -82,6 +83,10 @@ function WebSocketPage() {
                     <li key={index}>{msg}</li>
                 ))}
             </ul>
+            <div className="row">
+                <ul id="file">
+                </ul>
+            </div>
             <div className="row">
                 <label>Message:</label>
                 <div className="input-group">
