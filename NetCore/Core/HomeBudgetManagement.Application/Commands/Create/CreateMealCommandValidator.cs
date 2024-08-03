@@ -2,18 +2,12 @@
 
 namespace HomeBudgetManagement.Application.Commands
 {
-    public class UpdateBudgetCommandValidator : AbstractValidator<UpdateBudgetCommand>
+    public class CreateMealCommandValidator : AbstractValidator<CreateMealCommand>
     {
-        public UpdateBudgetCommandValidator()
+        public CreateMealCommandValidator()
         {
-            RuleFor(obj => obj.Id).NotNull().GreaterThan(0)
-                .WithMessage("Id is required");            
-            
-            RuleFor(obj => obj.Description).NotEmpty()
-                .WithMessage("Description is required");
-
-            RuleFor(obj => obj.ItemType).NotNull()
-                .WithMessage("Type is required");
+            RuleFor(obj => obj.Name).Length(1, 100).NotEmpty()
+                .WithMessage("Name is required");
 
             //Other examples...
             //RuleFor(obj => obj.RequestID).Length(1, 50)

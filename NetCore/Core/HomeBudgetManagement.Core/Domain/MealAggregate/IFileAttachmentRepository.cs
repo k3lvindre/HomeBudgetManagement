@@ -1,9 +1,8 @@
 ﻿using HomeBudgetManagement.SharedKernel;
 
-namespace HomeBudgetManagement.Core.Domain.BudgetAggregate
+namespace HomeBudgetManagement.Core.Domain.MealAggregate
 {
     public interface IFileAttachmentRepository : IGenericRepository<FileAttachment>
     {
-        Task<FileAttachment> GetByBudgetIdAsync(int Id);
     }
 }

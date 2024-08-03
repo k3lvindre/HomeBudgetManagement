@@ -22,6 +22,8 @@
 
         Task<T?> GetByIdAsync(int id);
 
+        Task<T?> GetByNameAsync(string name);
+
         void Update(T entity);
     }
 }

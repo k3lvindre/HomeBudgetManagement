@@ -1,4 +1,4 @@
-﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
+﻿using HomeBudgetManagement.Core.Domain.MealAggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework
@@ -23,7 +23,7 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework
         }
 
 
-        public virtual DbSet<Budget> Budget { get; set; }
-        public virtual DbSet<FileAttachment> FileAttachment { get; set; }
+        public virtual DbSet<Meal> Meals { get; set; }
+        public virtual DbSet<FileAttachment> FileAttachments { get; set; }
     }
 }

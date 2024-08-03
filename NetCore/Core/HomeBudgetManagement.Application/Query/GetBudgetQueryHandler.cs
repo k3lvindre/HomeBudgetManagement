@@ -1,15 +1,15 @@
-﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
+﻿using HomeBudgetManagement.Core.Domain.MealAggregate;
 using HomeBudgetManagement.DTO;
 using HomeBudgetManagement.SharedKernel.ValueObjects;
 using MediatR;
 
 namespace HomeBudgetManagement.Application.Query
 {
-    public class GetBudgetQueryHandler(IBudgetRepository budgetRepository) : IRequestHandler<GetExpenseQuery, IEnumerable<BudgetDto>>
+    public class GetBudgetQueryHandler(IMealRepository budgetRepository) : IRequestHandler<GetExpenseQuery, IEnumerable<MealDto>>
     {
-        private readonly IBudgetRepository _budgetRepository = budgetRepository;
+        private readonly IMealRepository _budgetRepository = budgetRepository;
 
-        public async Task<IEnumerable<BudgetDto>> Handle(GetExpenseQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MealDto>> Handle(GetExpenseQuery query, CancellationToken cancellationToken)
         {
             //Tech debt: get filtered items instead of getting all items
             //Tech debt: add automapper for dto
@@ -19,13 +19,13 @@ namespace HomeBudgetManagement.Application.Query
             if (query.ListOfId is not null)
             {
                 if (query.ListOfId.Count != 0) result = result.Where(expense => query.ListOfId.Contains(expense.Id)).ToList();
-                return result.ConvertAll<BudgetDto>(ConvertToDto);
+                return result.ConvertAll<MealDto>(ConvertToDto);
             }
 
-            if (query.Type is not null)
-            {
-                result = result.Where(expense => expense.ItemType == query.Type).ToList();
-            }
+            //if (query.Type is not null)
+            //{
+            //    result = result.Where(expense => expense.ItemType == query.Type).ToList();
+            //}
 
             if(!(string.IsNullOrEmpty(query.DateFrom) && string.IsNullOrEmpty(query.DateTo)))
             {
@@ -35,16 +35,14 @@ namespace HomeBudgetManagement.Application.Query
                 result = result.Where(x => x.CreatedDate >= dateFrom && x.CreatedDate <= dateTo).ToList();
             }
 
-            return result.ConvertAll<BudgetDto>(ConvertToDto);
+            return result.ConvertAll<MealDto>(ConvertToDto);
         }
 
-        private BudgetDto ConvertToDto(Budget budget) => 
-            new BudgetDto() 
+        private MealDto ConvertToDto(Meal budget) => 
+            new MealDto() 
             { 
-                Amount = budget.Amount, 
+                Price = budget.Price, 
                 Description = budget.Description,
-                Date = budget.CreatedDate,
-                Type = Enum.GetName<ItemType>(budget.ItemType)!,
                 Id = budget.Id
             };
     }

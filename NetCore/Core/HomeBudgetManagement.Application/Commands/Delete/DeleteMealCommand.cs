@@ -2,7 +2,7 @@
 
 namespace HomeBudgetManagement.Application.Commands
 {
-    public class DeleteBudgetCommand: IRequest<bool>
+    public class DeleteMealCommand: IRequest<bool>
     {
         public required int Id { get; set; }
     }

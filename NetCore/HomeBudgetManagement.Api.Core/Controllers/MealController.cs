@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     //Its purpose is to declare that the controller's actions support a response content type of application/json:
     [Produces("application/json")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class BudgetController(IMediator mediator) : ControllerBase
+    public class MealController(IMediator mediator) : ControllerBase
     {
         private readonly IMediator _mediator = mediator;
         static List<WebSocket> _webSocketConnections = new List<WebSocket>();
@@ -92,13 +93,13 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         //other example is:
         //[ProducesResponseType(typeof(ErrorResponse), 400)]
-        public async Task<IActionResult> Create(CreateBudgetRequestDto expense)
+        public async Task<IActionResult> Create(CreateMealRequestDto expense)
         {
-            var command = new CreateBudgetCommand()
+            var command = new CreateMealCommand()
             {
+                Name = expense.Name,
                 Description = expense.Description,
-                Amount = expense.Amount,
-                ItemType = (ItemType)expense.Type,
+                Price = expense.Price,
                 File = expense.File,
                 FileExtension = expense.FileExtension,
             };
@@ -110,14 +111,14 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [HttpPut]
         [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(UpdateBudgetRequestDto requestDto)
+        public async Task<IActionResult> Update(UpdateMealRequestDto requestDto)
         {
-            var command = new UpdateBudgetCommand()
+            var command = new UpdateMealCommand()
             {
                 Id = requestDto.Id,
+                Name = requestDto.Name,
                 Description = requestDto.Description,
-                Amount = requestDto.Amount,
-                ItemType = (ItemType)requestDto.Type
+                Price = requestDto.Price,
             };
 
             var result = await _mediator.Send(command);
@@ -134,7 +135,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _mediator.Send(new DeleteBudgetCommand()
+            var result = await _mediator.Send(new DeleteMealCommand()
             {
                 Id = id
             });
@@ -187,6 +188,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
 
         //Web Sockets Example
         [Route("/ws")]
+        [HttpPost]
         public async Task WebSocketAction()
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)

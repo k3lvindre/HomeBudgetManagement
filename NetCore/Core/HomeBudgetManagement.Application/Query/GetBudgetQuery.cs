@@ -4,7 +4,7 @@ using MediatR;
 
 namespace HomeBudgetManagement.Application.Query
 {
-    public class GetExpenseQuery : IRequest<IEnumerable<BudgetDto>>
+    public class GetExpenseQuery : IRequest<IEnumerable<MealDto>>
     {
         public List<int>? ListOfId { get; set; }
         public ItemType? Type { get; set; }

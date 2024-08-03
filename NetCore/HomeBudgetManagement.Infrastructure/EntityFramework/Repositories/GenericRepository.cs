@@ -44,6 +44,9 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
 
         public async virtual Task<T?> GetByIdAsync(int id) => await _entity.FindAsync(id);
 
+        public async Task<T?> GetByNameAsync(string name)
+            => await _entity.FirstOrDefaultAsync(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+
         public virtual void Update(T entity)
         {
             _context.Entry(entity).State = EntityState.Modified;

@@ -1,18 +1,18 @@
-﻿using HomeBudgetManagement.Core.Domain.BudgetAggregate;
+﻿using HomeBudgetManagement.Core.Domain.MealAggregate;
 using HomeBudgetManagement.SharedKernel.ValueObjects;
 
 namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
 {
-    public class BudgetRepository : GenericRepository<Budget>, IBudgetRepository
+    public class MealRepository : GenericRepository<Meal>, IMealRepository
     {
         private readonly HomeBudgetManagementDbContext _context;
 
-        public BudgetRepository(HomeBudgetManagementDbContext context) : base(context)
+        public MealRepository(HomeBudgetManagementDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public Task<List<Budget>> GetByTypeAsync(ItemType itemType)
+        public Task<List<Meal>> GetByTypeAsync(ItemType itemType)
         {
             throw new NotImplementedException();
         }

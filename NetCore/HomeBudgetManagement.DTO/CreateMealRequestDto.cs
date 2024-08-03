@@ -3,14 +3,14 @@
 namespace HomeBudgetManagement.DTO
 {
     [DataContract]
-    public class CreateBudgetRequestDto
+    public class CreateMealRequestDto
     {
+        [DataMember(Name = "name")]
+        public required string Name { get; set; }
         [DataMember(Name = "description")]
-        public required string Description { get; set; }
-        [DataMember(Name = "amount")]
-        public required double Amount { get; set; }
-        [DataMember(Name = "type")]
-        public required int Type { get; set; }
+        public string? Description { get; set; }
+        [DataMember(Name = "price")]
+        public required double Price { get; set; }
         [DataMember(Name = "file")]
         public byte[]? File { get; set; }
         [DataMember(Name = "fileExtension")]

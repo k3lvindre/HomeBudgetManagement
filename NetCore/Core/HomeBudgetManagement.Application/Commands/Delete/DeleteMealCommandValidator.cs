@@ -2,9 +2,9 @@
 
 namespace HomeBudgetManagement.Application.Commands
 {
-    public class DeleteBudgetCommandValidator : AbstractValidator<DeleteBudgetCommand>
+    public class DeleteMealCommandValidator : AbstractValidator<DeleteMealCommand>
     {
-        public DeleteBudgetCommandValidator()
+        public DeleteMealCommandValidator()
         {
             RuleFor(obj => obj.Id).NotNull().GreaterThan(0)
                 .WithMessage("Id is required");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeBudgetManagement.Api.Core.Migrations.HomeBudgetManagementDb
 {
     [DbContext(typeof(HomeBudgetManagementDbContext))]
-    [Migration("20240217100608_Initial")]
-    partial class Initial
+    [Migration("20240803044922_ChangeEntityToMeal")]
+    partial class ChangeEntityToMeal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,42 +25,13 @@ namespace HomeBudgetManagement.Api.Core.Migrations.HomeBudgetManagementDb
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HomeBudgetManagement.Core.Domain.BudgetAggregate.Budget", b =>
+            modelBuilder.Entity("HomeBudgetManagement.Core.Domain.MealAggregate.FileAttachment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ItemType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Budget");
-                });
-
-            modelBuilder.Entity("HomeBudgetManagement.Core.Domain.BudgetAggregate.FileAttachment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BudgetId")
-                        .HasColumnType("int");
 
                     b.Property<byte[]>("Content")
                         .IsRequired()
@@ -72,23 +43,46 @@ namespace HomeBudgetManagement.Api.Core.Migrations.HomeBudgetManagementDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BudgetId")
-                        .IsUnique();
-
-                    b.ToTable("FileAttachment");
+                    b.ToTable("FileAttachments");
                 });
 
-            modelBuilder.Entity("HomeBudgetManagement.Core.Domain.BudgetAggregate.FileAttachment", b =>
+            modelBuilder.Entity("HomeBudgetManagement.Core.Domain.MealAggregate.Meal", b =>
                 {
-                    b.HasOne("HomeBudgetManagement.Core.Domain.BudgetAggregate.Budget", null)
-                        .WithOne("FileAttachment")
-                        .HasForeignKey("HomeBudgetManagement.Core.Domain.BudgetAggregate.FileAttachment", "BudgetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("FileAttachmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileAttachmentId");
+
+                    b.ToTable("Meals");
                 });
 
-            modelBuilder.Entity("HomeBudgetManagement.Core.Domain.BudgetAggregate.Budget", b =>
+            modelBuilder.Entity("HomeBudgetManagement.Core.Domain.MealAggregate.Meal", b =>
                 {
+                    b.HasOne("HomeBudgetManagement.Core.Domain.MealAggregate.FileAttachment", "FileAttachment")
+                        .WithMany()
+                        .HasForeignKey("FileAttachmentId");
+
                     b.Navigation("FileAttachment");
                 });
 #pragma warning restore 612, 618
