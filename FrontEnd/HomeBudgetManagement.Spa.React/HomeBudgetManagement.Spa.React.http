@@ -1,6 +1,0 @@
-@HomeBudgetManagement.Spa.React_HostAddress = http://localhost:5062
-
-GET {{HomeBudgetManagement.Spa.React_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
