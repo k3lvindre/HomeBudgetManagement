@@ -7,11 +7,11 @@ namespace HomeBudgetManagement.DTO
     {
         [DataMember(Name = "id")]
         public required int Id { get; set; }
-        [DataMember(Name = "Name")]
+        [DataMember(Name = "name")]
         public required string Name { get; set; }
         [DataMember(Name = "description")]
         public string? Description { get; set; }
-        [DataMember(Name = "amount")]
+        [DataMember(Name = "price")]
         public required double Price { get; set; }
         [DataMember(Name = "file")]
         public byte[]? File { get; set; }

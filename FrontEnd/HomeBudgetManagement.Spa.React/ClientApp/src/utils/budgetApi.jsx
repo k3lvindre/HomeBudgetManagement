@@ -70,34 +70,6 @@ export const postBudget = async (request) => {
     }
 }
 
-export const search = async (request) => {
-    console.log(request);
-    var token = await getToken();
-
-    // Fetch data from your API endpoint
-    //Here we dont use await because we want to other task unlike in other method which the response needs to await so it can be read
-    //but here we use .then so no need for await
-    return fetch(baseUrl + 'search',
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(request),
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.log(`HTTP error! Status: ${response.status}`);
-                return;
-            }
-            return response.json(); // Assuming the response is in JSON format
-        })
-        .then((data) => {
-            return data;
-        });
-}
-
 export const getAll = async () => {
     var token = await getToken();
 

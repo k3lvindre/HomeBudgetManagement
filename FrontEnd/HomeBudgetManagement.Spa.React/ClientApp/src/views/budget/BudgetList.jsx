@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { deleteBudget, search} from '../../utils/budgetApi'; 
+import { deleteBudget, getAll} from '../../utils/budgetApi'; 
 
 const BudgetList = () => {
     const [items, setItems] = useState([]);
@@ -19,14 +19,8 @@ const BudgetList = () => {
 
     const loadData = async () => {
         // Fetch data from your API endpoint
-        var request = {
-            listOfId: null,
-            type: selectedItemType == '0' ? null : selectedItemType,
-            dateFrom: dateRange.dateFrom,
-            dateTo: dateRange.dateTo,
-        };
-
-        await search(request).then((data) => {
+     
+        await getAll().then((data) => {
             if (data) {
                 setItems(data);
                 setSum(computeSum(data));

@@ -11,11 +11,6 @@ namespace HomeBudgetManagement.Infrastructure.EntityFramework.Repositories
         {
             _context = context;
         }
-
-        public Task<List<Meal>> GetByTypeAsync(ItemType itemType)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     //public class ExpenseRepository : Repository<Expense>, IExpenseRepository
