@@ -31,6 +31,7 @@ namespace HomeBudgetManagement.Api.Core.Controllers
     {
         private readonly IMediator _mediator = mediator;
         static List<WebSocket> _webSocketConnections = new List<WebSocket>();
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {

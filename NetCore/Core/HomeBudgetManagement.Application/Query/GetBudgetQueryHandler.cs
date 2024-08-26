@@ -41,9 +41,11 @@ namespace HomeBudgetManagement.Application.Query
         private MealDto ConvertToDto(Meal budget) => 
             new MealDto() 
             { 
-                Price = budget.Price, 
+                Id = budget.Id,
+                Name = budget.Name,
                 Description = budget.Description,
-                Id = budget.Id
+                Price = budget.Price, 
+                CreatedDate = budget.CreatedDate, 
             };
     }
 }

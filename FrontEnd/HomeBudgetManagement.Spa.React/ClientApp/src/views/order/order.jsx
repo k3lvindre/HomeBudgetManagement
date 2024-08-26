@@ -1,17 +1,25 @@
 // src/components/OrderForm.js
 import React, { useState, useEffect } from "react";
+import { getAll } from '../../utils/budgetApi'; 
+
 const OrderForm = () => {
     const [orderItems, setOrderItems] = useState([{ product: "", quantity: 1 }]);
+    const [products, setProducts] = useState([]);
+
+    const fetchProducts = async () => {
+        await getAll().then((data) => {
+            if (data) {
+                setProducts(data);
+            } else {
+                setProducts([]);
+            }
+        });
+    }
 
     useEffect(() => {
+        fetchProducts();
     }, []); 
-
-    const productOptions = [
-        { id: "1", name: "Product A" },
-        { id: "2", name: "Product B" },
-        { id: "3", name: "Product C" },
-    ];
-
+    
     const handleInputChange = (index, event) => {
         const values = [...orderItems];
         if (event.target.name === "product") {
@@ -51,8 +59,8 @@ const OrderForm = () => {
                         required
                     >
                         <option value="" disabled>Select a product</option>
-                        {productOptions.map((product) => (
-                            <option key={product.id} value={product.name}>
+                        {products.map((product) => (
+                            <option key={product.id} value={product.id}>
                                 {product.name}
                             </option>
                         ))}
