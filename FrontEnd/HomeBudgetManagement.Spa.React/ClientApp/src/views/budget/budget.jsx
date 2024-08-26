@@ -17,12 +17,14 @@ const BudgetForm = (props) => {
     //Avoid using var due to its function-scoping and potential hoisting issues 
     //but const and let are better because block scoped
     const [description, setDescription] = useState('');
+    const [name, setName] = useState('');
     const [amount, setAmount] = useState();
-    const [selectedType, setSelectedType] = useState(1);
+    //const [selectedType, setSelectedType] = useState(1);
 
     const handleDescriptionChange = (e) => setDescription(e.target.value);
     const handleAmountChange = (e) => setAmount(e.target.value);
-    const handleSelect = (itemType) => setSelectedType(itemType);
+    const handleNameChange = (e) => setName(e.target.value);
+    //const handleSelect = (itemType) => setSelectedType(itemType);
 
     // Parse query parameters from URL
     const searchParams = new URLSearchParams(window.location.search);
@@ -34,9 +36,10 @@ const BudgetForm = (props) => {
 
     const loadData = async () => {
         var budget = await getById(id);
+        setName(budget.name);
         setDescription(budget.description);
-        setAmount(budget.amount);
-        setSelectedType(ItemTypes[budget.type]);
+        setAmount(budget.price);
+        //setSelectedType(ItemTypes[budget.type]);
     }
 
     const handleSubmit = async (e) => {
@@ -44,9 +47,9 @@ const BudgetForm = (props) => {
 
         var request = {
             id: id,
+            name: name,
             description: description,
-            price: amount,
-            type: selectedType
+            price: amount
         };
 
         await postBudget(request);
@@ -56,36 +59,47 @@ const BudgetForm = (props) => {
         <div className="container mt-5">
               <h2 className="mb-4">Create an Item</h2>
             <form onSubmit={handleSubmit}>
+                {/*<div className="form-group">*/}
+                {/*    <label htmlFor="Type">Type</label>*/}
+                {/*    <DropdownComponent selectedType={selectedType} onSelect={handleSelect} />*/}
+                {/*</div>*/}
                 <div className="form-group">
-                    <label htmlFor="Type">Type</label>
-                    <DropdownComponent selectedType={selectedType} onSelect={handleSelect} />
+                    <label htmlFor="name">Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      value={name}
+                      onChange={handleNameChange}
+                      required
+                    />
+                </div>
+               <div className="form-group">
+                    <label htmlFor="description">Description</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="description"
+                      value={description}
+                      onChange={handleDescriptionChange}
+                      required
+                    />
                 </div>
                 <div className="form-group">
-                      <label htmlFor="description">Description</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="description"
-                        value={description}
-                        onChange={handleDescriptionChange}
-                        required
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="amount">Amount</label>
-                      <input
-                        type="number"
-                        className="form-control"
-                        id="amount"
-                        value={amount}
-                        onChange={handleAmountChange}
-                        required
-                      />
-                    </div>
-                    <button type="submit" className="btn btn-primary">
+                    <label htmlFor="amount">Amount</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="amount"
+                      value={amount}
+                      onChange={handleAmountChange}
+                      required
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">
                       Save
-                    </button>
-              </form>
+                </button>
+            </form>
         </div>
     );
 };

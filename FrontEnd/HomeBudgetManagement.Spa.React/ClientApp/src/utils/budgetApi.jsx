@@ -5,7 +5,7 @@ const baseUrl = "http://localhost:5143/api/sampleendpointmodificationthatmapstod
 
 var getToken = async () => {
     var token = getCookie('token');
-    if (token == null) await signIn("kelvin2", "P@ssword12345");
+    if (token == null) await signIn("kelvin", "P@ssword12345");
     return getCookie('token');
 }
 
@@ -85,6 +85,32 @@ export const search = async (request) => {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(request),
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.log(`HTTP error! Status: ${response.status}`);
+                return;
+            }
+            return response.json(); // Assuming the response is in JSON format
+        })
+        .then((data) => {
+            return data;
+        });
+}
+
+export const getAll = async () => {
+    var token = await getToken();
+
+    // Fetch data from your API endpoint
+    //Here we dont use await because we want to other task unlike in other method which the response needs to await so it can be read
+    //but here we use .then so no need for await
+    return fetch(baseUrl,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         })
         .then(response => {
             if (!response.ok) {

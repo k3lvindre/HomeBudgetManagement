@@ -183,9 +183,9 @@ const BudgetList = () => {
                     <tr>
                         <th>Id</th>
                         <th>Date</th>
+                        <th>Name</th>
                         <th>Description</th>
-                        <th>Amount</th>
-                        <th>Type</th>
+                        <th>Price</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -193,10 +193,10 @@ const BudgetList = () => {
                     {items?.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
-                            <td>{new Date(item.date).toLocaleDateString()}</td>
+                            <td>{new Date(item.createddate).toLocaleDateString()}</td>
+                            <td>{item.name}</td>
                             <td>{item.description}</td>
-                            <td>{item.amount}</td>
-                            <td>{item.type}</td>
+                            <td>{item.price}</td>
                             <td>
                                 <button className="btn btn-info mr-2" onClick={() => handleView(item.id)}>View</button>
                                 <button className="btn btn-danger" onClick={() => handleDelete(item.id)}>Delete</button>
