@@ -1,7 +1,7 @@
 import { getCookie } from './cookieManager'; 
 import { signIn } from './authApi'; 
 
-const baseUrl = "http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/budget/";
+const baseUrl = "http://localhost:5143/api/sampleendpointmodificationthatmapstodownstream/meal/";
 
 var getToken = async () => {
     var token = getCookie('token');

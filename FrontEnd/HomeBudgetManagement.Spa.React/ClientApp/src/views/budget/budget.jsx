@@ -1,6 +1,6 @@
 // src/views/expense/CreateExpenseForm.jsx
 import React, { useState, useEffect, memo, useRef } from 'react';
-import DropdownComponent from './itemTypeDropdown';
+import DropdownComponent from '../budget/ItemTypeDropdown';
 import { getById, postBudget } from '../../utils/budgetApi'; 
 import ItemTypes from '../../common/itemTypes'; // Import your enum
 
@@ -45,7 +45,7 @@ const BudgetForm = (props) => {
         var request = {
             id: id,
             description: description,
-            amount: amount,
+            price: amount,
             type: selectedType
         };
 
